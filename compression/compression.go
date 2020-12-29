@@ -21,6 +21,7 @@ const (
 type Codec interface {
 	Compress(input []byte) ([]byte, error)
 	Uncompress(data []byte) ([]byte, error)
+	String() string
 }
 
 func Algorithm(algorithm Type) Codec {

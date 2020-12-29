@@ -1,6 +1,8 @@
 package codec
 
 import (
+	"fmt"
+
 	compression "github.com/multiverse-os/starshipyard/framework/datastore/codec/compression"
 	encoding "github.com/multiverse-os/starshipyard/framework/datastore/codec/encoding"
 )
@@ -23,9 +25,13 @@ type Codec struct {
 // Initialization with raw/no compression, that can be defined
 func Initialize() Codec {
 	return Codec{
-		encoding:    encoding.Format(encoding.JSON),
+		encoding:    encoding.Format(encoding.Raw),
 		compression: compression.Algorithm(compression.None),
 	}
+}
+
+func (self Codec) String() string {
+	return fmt.Sprintf("ecoding=%s,compression=%s", self.encoding.String(), self.compression.String())
 }
 
 // Chain-able codec defintion //////////////////////////////////////////////////

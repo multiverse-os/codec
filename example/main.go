@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/multiverse-os/starshipyard/framework/datastore/codec"
+	"github.com/multiverse-os/starshipyard/framework/datastore/codec/encoding"
 )
 
 func main() {
@@ -55,6 +56,23 @@ func main() {
 
 	fmt.Println("======================================================")
 	fmt.Println("(2) Run through json encoding with no compression")
+
+	fmt.Println("-------------------------------------------------------")
+	fmt.Println("[TEST] Codec= JSON Encoding Type -> .Encode(\"test\") ")
+
+	codec = codec.EncodingFormat(encoding.JSON)
+
+	fmt.Println("codec encoding format:", codec.String())
+	fmt.Printf("test:%s\n", test)
+	if test, err := codec.Encode("test"); err != nil {
+		fmt.Println("err:", err)
+	} else {
+		fmt.Println("test:", test)
+		fmt.Printf("test:%s\n", test)
+	}
+
+	fmt.Println("-------------------------------------------------------")
+
 	fmt.Println("======================================================")
 	fmt.Println("(3) Run through json encoding with gzip compression")
 	fmt.Println("======================================================")

@@ -21,6 +21,7 @@ const (
 type Codec interface {
 	Encode(input interface{}) ([]byte, error)
 	Decode(data []byte, output interface{}) error
+	String() string
 }
 
 func Format(dataType Type) Codec {
