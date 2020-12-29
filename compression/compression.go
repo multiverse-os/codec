@@ -1,16 +1,16 @@
 package compression
 
 import (
-	gzip "./gzip"
-	none "./none"
-	snappy "./snappy"
-	zstd "./zstd"
+	gzip "github.com/multiverse-os/starshipyard/framework/datastore/codec/compression/gzip"
+	none "github.com/multiverse-os/starshipyard/framework/datastore/codec/compression/none"
+	snappy "github.com/multiverse-os/starshipyard/framework/datastore/codec/compression/snappy"
+	zstd "github.com/multiverse-os/starshipyard/framework/datastore/codec/compression/zstd"
 )
 
-type Algorithm int
+type CompressionType int
 
 const (
-	None Algorithm = iota
+	None CompressionType = iota
 	Gzip
 	Snappy
 	Zstd
@@ -18,12 +18,12 @@ const (
 
 // NOTE: Decompress means to relieve the pressure or compression on something,
 //       whereas uncompress means to restore a compressed file.
-type Compressor interface {
-	Compress(input interface{}) ([]byte, error)
-	Uncompress(data []byte, output interface{}) error
+type Algorithm interface {
+	Compress(input []byte) ([]byte, error)
+	Uncompress(data []byte) ([]byte, error)
 }
 
-func Load(algorithm Algorithm) Compressor {
+func Type(algorithm CompressionType) Algorithm {
 	switch algorithm {
 	case Gzip:
 		return gzip.Compression{}

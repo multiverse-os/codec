@@ -6,8 +6,8 @@ import (
 
 type Compression struct{}
 
-func (Compression) Compress(input []byte) []byte {
-	return snappy.Encode(nil, input)
+func (Compression) Compress(input []byte) ([]byte, error) {
+	return snappy.Encode(nil, input), nil
 }
 
 func (Compression) Uncompress(input []byte) ([]byte, error) {

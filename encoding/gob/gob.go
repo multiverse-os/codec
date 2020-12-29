@@ -1,4 +1,4 @@
-package format
+package gob
 
 import (
 	"bytes"

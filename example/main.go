@@ -13,9 +13,11 @@ func main() {
 
 	codec := codec.Initialize()
 
-	test := codec.Encode("test")
-
-	fmt.Println("test:", test)
+	if test, err := codec.Encode("test"); err != nil {
+		fmt.Println("err:", err)
+	} else {
+		fmt.Println("test:", test)
+	}
 
 	fmt.Println("======================================================")
 	fmt.Println("(2) Run through json encoding with no compression")

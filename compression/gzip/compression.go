@@ -24,15 +24,19 @@ func Load() Compression {
 	}
 }
 
-func (self Compression) Compress(input []byte) []byte {
+// Compress([]byte) []byte
+// Compress(interface {}) ([]byte, error)
+func (self Compression) Compress(input []byte) ([]byte, error) {
 	var buffer bytes.Buffer
 	gzipWriter := NewWriter(&buffer)
 	gzipWriter.SetConcurrency(self.ChunkSize, self.Parallel)
 	gzipWriter.Write(input)
 	gzipWriter.Close()
-	return buffer.Bytes()
+	return buffer.Bytes(), nil
 }
 
+// Uncompress([]byte) ([]byte, error)
+// Uncompress([]byte, interface {}) error
 func (Compression) Uncompress(input []byte) ([]byte, error) {
 	gzipReader, _ := NewReader(bytes.NewReader(input))
 	return ioutil.ReadAll(gzipReader)
