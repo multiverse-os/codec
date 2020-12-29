@@ -17,14 +17,14 @@ type MarshalUnmarshaler interface {
 
 type Codec struct {
 	encoding    encoding.Codec
-	compression compression.Algorithm
+	compression compression.Codec
 }
 
 // Initialization with raw/no compression, that can be defined
 func Initialize() Codec {
 	return Codec{
 		encoding:    encoding.Format(encoding.JSON),
-		compression: compression.Type(compression.None),
+		compression: compression.Algorithm(compression.None),
 	}
 }
 
@@ -34,8 +34,8 @@ func (self Codec) FormatType(encodingType encoding.Type) Codec {
 	return self
 }
 
-func (self Codec) CompressionAlgorithm(c compression.CompressionType) Codec {
-	self.compression = compression.Type(c)
+func (self Codec) CompressionAlgorithm(c compression.Type) Codec {
+	self.compression = compression.Algorithm(c)
 	return self
 }
 
@@ -58,3 +58,7 @@ func (self Codec) Compress(input []byte) ([]byte, error) {
 func (self Codec) Uncompress(input []byte) ([]byte, error) {
 	return self.compression.Uncompress(input)
 }
+
+////////////////////////////////////////////////////////////////////////////////
+
+// Encode/Decode AND Compress/Uncompress ///////////////////////////////////////

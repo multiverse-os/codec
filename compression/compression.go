@@ -7,10 +7,10 @@ import (
 	zstd "github.com/multiverse-os/starshipyard/framework/datastore/codec/compression/zstd"
 )
 
-type CompressionType int
+type Type int
 
 const (
-	None CompressionType = iota
+	None Type = iota
 	Gzip
 	Snappy
 	Zstd
@@ -18,12 +18,12 @@ const (
 
 // NOTE: Decompress means to relieve the pressure or compression on something,
 //       whereas uncompress means to restore a compressed file.
-type Algorithm interface {
+type Codec interface {
 	Compress(input []byte) ([]byte, error)
 	Uncompress(data []byte) ([]byte, error)
 }
 
-func Type(algorithm CompressionType) Algorithm {
+func Algorithm(algorithm Type) Codec {
 	switch algorithm {
 	case Gzip:
 		return gzip.Compression{}

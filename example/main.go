@@ -17,6 +17,7 @@ func main() {
 		fmt.Println("err:", err)
 	} else {
 		fmt.Println("test:", test)
+		fmt.Printf("test:%s\n", test)
 	}
 
 	fmt.Println("======================================================")
