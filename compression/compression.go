@@ -23,8 +23,8 @@ type Compressor interface {
 	Uncompress(data []byte, output interface{}) error
 }
 
-func Load(compressionType Algorithm) Compressor {
-	switch compressionType {
+func Load(algorithm Algorithm) Compressor {
+	switch algorithm {
 	case Gzip:
 		return gzip.Compression{}
 	case Snappy:

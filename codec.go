@@ -6,8 +6,8 @@ import (
 )
 
 type Codec struct {
-	format      format.EncodingType
-	compression compression.Type
+	format      format.Type
+	compression compression.Algorithm
 }
 
 // Initialization with raw/no compression, that can be defined

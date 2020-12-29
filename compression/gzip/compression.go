@@ -3,8 +3,6 @@ package gzip
 import (
 	"bytes"
 	"io/ioutil"
-
-	gzip "github.com/multiverse-os/starshipyard/framework/datastore/codec/compression/gzip/gzip"
 )
 
 // NOTE: Parallelization of gzip boosts the preformance by:
@@ -18,28 +16,28 @@ type Compression struct {
 	Parallel  int
 }
 
-func Load() Gzip {
-	return Gzip{
+func Load() Compression {
+	return Compression{
 		//ChunkSize: 512000, // 5 Megabytes
 		ChunkSize: 102400, // 1 Megabyte
 		Parallel:  4,      // 4 Parallel Processes
 	}
 }
 
-func (self Gzip) Compress(input []byte) []byte {
+func (self Compression) Compress(input []byte) []byte {
 	var buffer bytes.Buffer
-	gzipWriter := gzip.NewWriter(&buffer)
+	gzipWriter := NewWriter(&buffer)
 	gzipWriter.SetConcurrency(self.ChunkSize, self.Parallel)
 	gzipWriter.Write(input)
 	gzipWriter.Close()
 	return buffer.Bytes()
 }
 
-func (Gzip) Uncompress(input []byte) ([]byte, error) {
-	gzipReader, _ := gzip.NewReader(bytes.NewReader(input))
+func (Compression) Uncompress(input []byte) ([]byte, error) {
+	gzipReader, _ := NewReader(bytes.NewReader(input))
 	return ioutil.ReadAll(gzipReader)
 }
 
-func (Gzip) String() string {
+func (Compression) String() string {
 	return "gzip"
 }
