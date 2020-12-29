@@ -1,9 +1,17 @@
 package format
 
-type DataType int
+import (
+	bson "./bson"
+	cbor "./cbor"
+	gob "./gob"
+	json "./json"
+	raw "./raw"
+)
+
+type Type int
 
 const (
-	Raw DataType = iota
+	Raw Type = iota
 	JSON
 	BSON
 	CBOR
@@ -15,18 +23,18 @@ type Formater interface {
 	Decode(data []byte, output interface{}) error
 }
 
-func Load(dataType DataType) Formater {
+func Load(dataType Type) Formater {
 	switch dataType {
 	case JSON:
-		return jsonFormat{}
+		return json.DataFormat{}
 	case BSON:
-		return bsonFormat{}
+		return bson.DataFormat{}
 	case CBOR:
-		return cborFormat{}
+		return cbor.DataFormat{}
 	case GOB:
-		return gobFormat{}
+		return gob.DataFormat{}
 	default: // Raw
-		return rawFormat{}
+		return raw.DataFormat{}
 	}
 
 }

@@ -1,10 +1,16 @@
 package codec
 
+import (
+	compression "./compression"
+	format "./format"
+)
+
 type Codec struct {
 	format      format.EncodingType
 	compression compression.Type
 }
 
+// Initialization with raw/no compression, that can be defined
 func Initialize() Codec {
 	return Codec{
 		format:      format.Raw,
@@ -12,6 +18,7 @@ func Initialize() Codec {
 	}
 }
 
+// Chain-able codec defintion //////////////////////////////////////////////////
 func (self Codec) FormatType(f format.Type) Codec {
 	self.format = format.Load(f)
 	return self
@@ -22,16 +29,22 @@ func (self Codec) CompressionAlgorithm(c compression.Algorithm) Codec {
 	return self
 }
 
-func (self Codec) Format(input interface{}) ([]byte, error) {
+// Encode/Decode Format ////////////////////////////////////////////////////////
+//	Encode(input interface{}) ([]byte, error)
+func (self Codec) Encode(input interface{}) ([]byte, error) {
 	return self.format.Encode(input)
 }
 
-//	Encode(input interface{}) ([]byte, error)
 //	Decode(data []byte, output interface{}) error
-func (self Codec) Encode(input interface{}) ([]byte, error) {
-	return self.Compression.Compress(input)
+func (self Codec) Decode(input interface{}, output interface{}) error {
+	return self.format.Decode(input, output)
 }
 
-func (self Codec) Decode(data []byte, output interface{}) error {
-	return
+// Compress / Uncompress ///////////////////////////////////////////////////////
+func (self Codec) Compress(input interface{}) ([]byte, error) {
+	return self.compression.Compress(input)
+}
+
+func (self Codec) Uncompress(input interface{}, output interface{}) error {
+	return self.compression.Uncompress(input)
 }

@@ -1,13 +1,13 @@
 package codec
 
-type rawFormat struct{}
+type DataFormat struct{}
 
-func (rawFormat) Encode(obj interface{}) ([]byte, error) {
+func (DataFormat) Encode(obj interface{}) ([]byte, error) {
 	return obj
 }
 
-func (rawFormat) Decode(data []byte, value interface{}) error {
+func (DataFormat) Decode(data []byte, value interface{}) error {
 	return data
 }
 
-func (rawFormat) String() string { return "raw" }
+func (DataFormat) String() string { return "raw" }

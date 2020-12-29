@@ -1,10 +1,10 @@
 package compression
 
 import (
-	"github.com/multiverse-os/starshipyard/framework/datastore/codec/compression/gzip"
-	"github.com/multiverse-os/starshipyard/framework/datastore/codec/compression/none"
-	"github.com/multiverse-os/starshipyard/framework/datastore/codec/compression/snappy"
-	"github.com/multiverse-os/starshipyard/framework/datastore/codec/compression/zstd"
+	gzip "./gzip"
+	none "./none"
+	snappy "./snappy"
+	zstd "./zstd"
 )
 
 type Algorithm int

@@ -1,15 +1,15 @@
 package cbor
 
-type dataFormat struct{}
+type DataFormat struct{}
 
-func (dataFormat) Encode(obj interface{}) ([]byte, error) {
+func (DataFormat) Encode(obj interface{}) ([]byte, error) {
 	//return cbor.Marshal(obj)
 	return []byte{}, nil
 }
 
-func (dataFormat) Decode(data []byte, value interface{}) error {
+func (DataFormat) Decode(data []byte, value interface{}) error {
 	//return cbor.Unmarshal(data, &value)
 	return nil
 }
 
-func (dataFormat) String() string { return "cbor" }
+func (DataFormat) String() string { return "cbor" }
