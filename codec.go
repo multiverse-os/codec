@@ -29,7 +29,7 @@ func Initialize() Codec {
 }
 
 // Chain-able codec defintion //////////////////////////////////////////////////
-func (self Codec) FormatType(encodingType encoding.Type) Codec {
+func (self Codec) EncodingFormat(encodingType encoding.Type) Codec {
 	self.encoding = encoding.Format(encodingType)
 	return self
 }
@@ -60,5 +60,3 @@ func (self Codec) Uncompress(input []byte) ([]byte, error) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-
-// Encode/Decode AND Compress/Uncompress ///////////////////////////////////////

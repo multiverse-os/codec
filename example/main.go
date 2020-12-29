@@ -7,13 +7,46 @@ import (
 )
 
 func main() {
-	fmt.Println("codec example")
+	fmt.Println("CODEC EXAMPLE v0.1.0")
 	fmt.Println("======================================================")
-	fmt.Println("(1) Run through raw and no compression")
+	fmt.Println("An example program that explains and provides basic testing")
+	fmt.Println("together...")
 
+	fmt.Println("[] Initializing the codec object, which stores: ")
+	fmt.Println(" '--> An encoding format [bson, json, cbor, etc...]")
+	fmt.Println(" '--> A compression algorithm [gzip, zstd, snappy, etc...]\n\n")
 	codec := codec.Initialize()
 
+	fmt.Println("The codec object by default is configured to use raw/none")
+	fmt.Println("And so has to be configured to do anything but pass the data")
+	fmt.Println("right through unchanged.")
+	fmt.Println("It is configured using the .Chain().Chain() Style:\n")
+	fmt.Println("   codec.Initialize().Encoding(encoding.JSON).Compression(compression.Gzip)\n\n")
+	fmt.Println("And it can be reconfigured on the fly, and then the:")
+	fmt.Println("    codec.Compress(\"data\")")
+	fmt.Println("    [OR] ")
+	fmt.Println("    codec.Encode(\"test\")\n")
+
+	fmt.Println("======================================================")
+	fmt.Println("(1) Run through raw and no compression")
+	var test string
+	fmt.Println("-------------------------------------------------------")
+	fmt.Println("[TEST] Codec= NO Encoding Type -> .Encode(\"test\") ")
+	test = "test"
+	fmt.Printf("test:%s\n", test)
 	if test, err := codec.Encode("test"); err != nil {
+		fmt.Println("err:", err)
+	} else {
+		fmt.Println("test:", test)
+		fmt.Printf("test:%s\n", test)
+	}
+
+	fmt.Println("-------------------------------------------------------")
+	fmt.Println("[TEST] Codec= NO Compression Algorithm -> .Compress([]byte(\"test\")) ")
+
+	test = "test"
+	fmt.Printf("test:%s\n", test)
+	if test, err := codec.Compress([]byte("test")); err != nil {
 		fmt.Println("err:", err)
 	} else {
 		fmt.Println("test:", test)
