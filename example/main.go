@@ -63,8 +63,19 @@ func main() {
 	codec = codec.EncodingFormat(encoding.JSON)
 
 	fmt.Println("codec encoding format:", codec.String())
+
+	type What struct {
+		Test string
+		Who  string
+	}
+
+	tester := What{
+		Test: "test",
+		Who:  "What",
+	}
+
 	fmt.Printf("test:%s\n", test)
-	if test, err := codec.Encode("test"); err != nil {
+	if test, err := codec.Encode(tester); err != nil {
 		fmt.Println("err:", err)
 	} else {
 		fmt.Println("test:", test)
