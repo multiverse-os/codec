@@ -75,11 +75,20 @@ func main() {
 	}
 
 	fmt.Printf("test:%s\n", test)
-	if test, err := codec.Encode(tester); err != nil {
+	testo, err := codec.Encode(tester)
+	if err != nil {
+		fmt.Println("err:", err)
+	}
+	fmt.Println("encodo:", testo)
+	fmt.Printf("encodo:%s\n", testo)
+
+	returno := &What{}
+
+	if err := codec.Decode(testo, &returno); err != nil {
 		fmt.Println("err:", err)
 	} else {
-		fmt.Println("test:", test)
-		fmt.Printf("test:%s\n", test)
+		fmt.Println("returno:", returno)
+		fmt.Printf("returno:%s\n", returno)
 	}
 
 	fmt.Println("-------------------------------------------------------")

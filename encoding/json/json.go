@@ -2,13 +2,12 @@ package json
 
 import (
 	"encoding/json"
-	"fmt"
 )
 
-type DataFormat struct{}
+type DataFormat struct {
+}
 
-func (DataFormat) Encode(obj interface{}) ([]byte, error) {
-	fmt.Println("json marshalling")
+func (self DataFormat) Encode(obj interface{}) ([]byte, error) {
 	return json.Marshal(obj)
 }
 
