@@ -1,7 +1,7 @@
 package cbor
 
 import (
-	cbor "github.com/fxamacker/cbor/v2"
+	cbor "./cbor"
 )
 
 type DataFormat struct{}
