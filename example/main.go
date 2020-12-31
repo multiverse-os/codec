@@ -67,6 +67,7 @@ func main() {
 	fmt.Println("======================================================")
 	fmt.Println("(2) Run through json encoding with no compression")
 
+	fmt.Println("ENCODE")
 	fmt.Println("-------------------------------------------------------")
 	fmt.Println("[TEST][codec]=[JSON]-> .Encode(\"test\") ")
 
@@ -85,6 +86,9 @@ func main() {
 	fmt.Printf("[encodedObject][encoded][string]:%s\n", encodedObject)
 
 	fmt.Println("-------------------------------------------------------")
+	fmt.Println("DECODE")
+	fmt.Println("-------------------------------------------------------")
+	fmt.Println("[TEST][codec]=[JSON]-> .Decode(\"test\") ")
 
 	fmt.Printf("[testObject]:%s\n", testObject)
 	err = codec.Decode(encodedObject, &emptyObject)
@@ -100,6 +104,7 @@ func main() {
 	fmt.Println("======================================================")
 	fmt.Println("(3) Run through json encoding with gzip compression")
 
+	fmt.Println("ENCODE")
 	fmt.Println("-------------------------------------------------------")
 	fmt.Println("[TEST][codec]=[encoding][JSON]=[compression][GZIP]-> .Encode(\"test\") ")
 
@@ -109,7 +114,6 @@ func main() {
 
 	fmt.Println("\n[codec][status]:", codec.String())
 	fmt.Println("\n[testObject]:", testObject)
-
 	encodedObject, err = codec.Encode(testObject)
 	if err != nil {
 		fmt.Println("err:", err)
@@ -120,13 +124,49 @@ func main() {
 	fmt.Println("[Length of encoded object]:", len(encodedObject))
 
 	fmt.Println("-------------------------------------------------------")
+	fmt.Println("DECODE")
+	fmt.Println("-------------------------------------------------------")
+
+	returnObject := &TestObject{}
+	fmt.Println("\n[encodedObject]:", encodedObject)
+	fmt.Println("\n[returnObject]:", returnObject)
+	err = codec.Decode(encodedObject, returnObject)
+	if err != nil {
+		fmt.Println("err:", err)
+	}
+	fmt.Println("[returnObject][encoded][byte]:", returnObject)
+	fmt.Printf("[returnObject][encoded][string]:%s\n", returnObject)
+
+	fmt.Println("[Length of encoded object]:", len(encodedObject))
+
+	fmt.Println("-------------------------------------------------------")
+	fmt.Println("COMPRESS")
+	fmt.Println("-------------------------------------------------------")
+
+	fmt.Println("\n[encodedObject]:", encodedObject)
 	compressedObject, err := codec.Compress(encodedObject)
 	if err != nil {
 		fmt.Println("err:", err)
 	}
+	fmt.Println("[compressedObject][compressed][byte]:", compressedObject)
+	fmt.Printf("[compresssedObject][compressed][string]:%s\n", compressedObject)
 
-	fmt.Println("[testObject][compressed][byte]:", compressedObject)
-	fmt.Printf("[testObject][compressed][string]:%s\n", compressedObject)
+	fmt.Println("-------------------------------------------------------")
+	fmt.Println("DECOMPRESS")
+	fmt.Println("-------------------------------------------------------")
+
+	fmt.Println("\n[compressedObject]:", compressedObject)
+	uncompressedData, err := codec.Uncompress(compressedObject)
+	if err != nil {
+		fmt.Println("err:", err)
+	}
+
+	fmt.Println("[Length of compressed object]:", len(compressedObject))
+	fmt.Println("[Length of uncompressed data]:", len(uncompressedData))
+
+	fmt.Println("[uncompressedData][uncompress][byte]:", uncompressedData)
+	fmt.Printf("[uncompressedData][uncompress][string]:%s\n", uncompressedData)
+
 	fmt.Println("-------------------------------------------------------")
 	fmt.Println("[Length of encoded object]:", len(encodedObject))
 	fmt.Println("[Length of compressed object]:", len(compressedObject))
@@ -135,6 +175,8 @@ func main() {
 	fmt.Println("(4) Run through zstd compression with raw encoding")
 
 	fmt.Println("[TEST][codec]=[encoding][raw]=[compression][ZSTD]-> .Encode(\"test\") ")
+	fmt.Println("-------------------------------------------------------")
+	fmt.Println("COMPRESS")
 	fmt.Println("-------------------------------------------------------")
 
 	codec = codec.EncodingFormat(encoding.Raw).CompressionAlgorithm(compression.Zstd)
@@ -151,6 +193,26 @@ func main() {
 	fmt.Println("[ZSTD]")
 	fmt.Println("[testObject][compressed][byte]:", compressedObject)
 	fmt.Printf("[testObject][compressed][string]:%s\n", compressedObject)
+
+	fmt.Println("-------------------------------------------------------")
+	fmt.Println("DECOMPRESS")
+	fmt.Println("-------------------------------------------------------")
+
+	fmt.Println("\n[compressedObject]:", compressedObject)
+	uncompressedData, err = codec.Uncompress(compressedObject)
+	if err != nil {
+		fmt.Println("err:", err)
+	}
+
+	fmt.Println("[Length of compressed object]:", len(compressedObject))
+	fmt.Println("[Length of uncompressed data]:", len(uncompressedData))
+
+	fmt.Println("[uncompressedData][uncompress][byte]:", uncompressedData)
+	fmt.Printf("[uncompressedData][uncompress][string]:%s\n", uncompressedData)
+
+	fmt.Println("-------------------------------------------------------")
+	fmt.Println("[Length of encoded object]:", len(encodedObject))
+	fmt.Println("[Length of compressed object]:", len(compressedObject))
 
 	fmt.Println("-------------------------------------------------------")
 	fmt.Println("[Length of compressed object]:", len(compressedObject))

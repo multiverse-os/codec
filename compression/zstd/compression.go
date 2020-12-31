@@ -13,12 +13,25 @@ func (Compression) Compress(input []byte) ([]byte, error) {
 }
 
 func (Compression) Uncompress(input []byte) ([]byte, error) {
-	var output []byte
 	decoder, _ := zstd.NewReader(nil)
-	decoder.DecodeAll(input, output)
-	return output, nil
+	return decoder.DecodeAll(input, nil)
 }
 
 func (Compression) String() string {
 	return "zstd"
 }
+
+////////////////////////////////////////////////////////////////////////////////
+// Streaming
+//
+//func Decompress(in io.Reader, out io.Writer) error {
+//    d, err := zstd.NewReader(input)
+//    if err != nil {
+//        return err
+//    }
+//    defer d.Close()
+//
+//    // Copy content...
+//    _, err := io.Copy(out, d)
+//    return err
+//}
