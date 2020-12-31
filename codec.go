@@ -3,6 +3,7 @@ package codec
 import (
 	"fmt"
 
+	checksum "github.com/multiverse-os/starshipyard/framework/datastore/codec/checksum"
 	compression "github.com/multiverse-os/starshipyard/framework/datastore/codec/compression"
 	encoding "github.com/multiverse-os/starshipyard/framework/datastore/codec/encoding"
 )
@@ -28,7 +29,7 @@ func Initialize() Codec {
 	return Codec{
 		encoding:    encoding.Format(encoding.Raw),
 		compression: compression.Algorithm(compression.None),
-		checksum:    checksum.Algorithm(checksum.XXH),
+		checksum:    checksum.Algorithm(checksum.None),
 	}
 }
 
@@ -41,6 +42,7 @@ func EncodingFormat(encodingType encoding.Type) Codec {
 	return Codec{
 		encoding:    encoding.Format(encodingType),
 		compression: compression.Algorithm(compression.None),
+		checksum:    checksum.Algorithm(checksum.None),
 	}
 }
 
@@ -48,6 +50,15 @@ func CompressionAlgorithm(c compression.Type) Codec {
 	return Codec{
 		encoding:    encoding.Format(encoding.Raw),
 		compression: compression.Algorithm(c),
+		checksum:    checksum.Algorithm(checksum.None),
+	}
+}
+
+func HashAlgorithm(c checksum.Type) Codec {
+	return Codec{
+		encoding:    encoding.Format(encoding.Raw),
+		compression: compression.Algorithm(compression.None),
+		checksum:    checksum.Algorithm(c),
 	}
 }
 
@@ -59,6 +70,11 @@ func (self Codec) EncodingFormat(encodingType encoding.Type) Codec {
 
 func (self Codec) CompressionAlgorithm(c compression.Type) Codec {
 	self.compression = compression.Algorithm(c)
+	return self
+}
+
+func (self Codec) ChecksumAlgorithm(c checksum.Type) Codec {
+	self.checksum = checksum.Algorithm(c)
 	return self
 }
 
@@ -94,3 +110,31 @@ func (self Codec) Checksum(input []byte) []byte {
 
 // MAYBE Add ability to take a large file, and break
 // it up into chunks and essentially merkle checksum it.
+
+////////////////////////////////////////////////////////////////////////////////
+// No Codec Access /////////////////////////////////////////////////////////////
+
+func Encode(e encoding.Type, input interface{}) ([]byte, error) {
+	codec := encoding.Format(e)
+	return codec.Encode(input)
+}
+
+func Decode(e encoding.Type, input []byte, value interface{}) error {
+	codec := encoding.Format(e)
+	return codec.Decode(input, value)
+}
+
+func Compress(c compression.Type, input []byte) ([]byte, error) {
+	codec := compression.Algorithm(c)
+	return codec.Compress(input)
+}
+
+func Uncompress(c compression.Type, input []byte) ([]byte, error) {
+	codec := compression.Algorithm(c)
+	return codec.Uncompress(input)
+}
+
+func Checksum(c checksum.Type, input []byte) []byte {
+	hash := checksum.Algorithm(c)
+	return hash.Encode(input)
+}

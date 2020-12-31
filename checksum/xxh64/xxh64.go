@@ -2,6 +2,7 @@ package xxh64
 
 import (
 	"fmt"
+	"reflect"
 
 	xxhash "github.com/cespare/xxhash"
 )
@@ -17,6 +18,10 @@ func (ChecksumData) Encode(input interface{}) []byte {
 	d.Write([]byte(fmt.Sprintf("%v", input)))
 	output := d.Sum64()
 	return []byte(fmt.Sprintf("%v", output))
+}
+
+func (self ChecksumData) Validate(checksum []byte, input []byte) bool {
+	return reflect.DeepEqual(checksum, self.Encode(input))
 }
 
 func (ChecksumData) String() string { return "xxhash" }

@@ -6,25 +6,25 @@ import (
 	xxh64 "github.com/multiverse-os/starshipyard/framework/datastore/leveldb/codec/checksum/xxh64"
 )
 
-type Hash int
+type Type int
 
 const (
-	None Hash = iota
+	None Type = iota
 	XXH64
 	SHA3
 	// ChaCha
 	// ..
 )
 
-type Checksum interface {
-	Encode(input interface{}) ([]byte, error)
-	Validate(checksum []byte, data []byte) error
+type Hash interface {
+	Encode(input interface{}) []byte
+	Validate(checksum []byte, data []byte) bool
 	String() string
 }
 
-func Algorithm(dataType Hash) Checksum {
+func Algorithm(dataType Type) Hash {
 	switch dataType {
-	case XXH:
+	case XXH64:
 		return xxh64.ChecksumData{}
 	case SHA3:
 		return sha3.ChecksumData{}
