@@ -20,6 +20,7 @@ type MarshalUnmarshaler interface {
 type Codec struct {
 	encoding    encoding.Codec
 	compression compression.Codec
+	checksum    checksum.Hash
 }
 
 // Initialization with raw/no compression, that can be defined
@@ -27,6 +28,7 @@ func Initialize() Codec {
 	return Codec{
 		encoding:    encoding.Format(encoding.Raw),
 		compression: compression.Algorithm(compression.None),
+		checksum:    checksum.Algorithm(checksum.XXH),
 	}
 }
 
@@ -81,3 +83,14 @@ func (self Codec) Uncompress(input []byte) ([]byte, error) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+
+// Checksum ////////////////////////////////////////////////////////////////////
+
+func (self Codec) Checksum(input []byte) []byte {
+	return self.checksum.Encode(input)
+}
+
+// TODO Add a validation checking.
+
+// MAYBE Add ability to take a large file, and break
+// it up into chunks and essentially merkle checksum it.
