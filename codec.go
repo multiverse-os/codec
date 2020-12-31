@@ -54,7 +54,7 @@ func CompressionAlgorithm(c compression.Type) Codec {
 	}
 }
 
-func HashAlgorithm(c checksum.Type) Codec {
+func ChecksumHash(c checksum.Type) Codec {
 	return Codec{
 		encoding:    encoding.Format(encoding.Raw),
 		compression: compression.Algorithm(compression.None),
@@ -73,7 +73,7 @@ func (self Codec) CompressionAlgorithm(c compression.Type) Codec {
 	return self
 }
 
-func (self Codec) ChecksumAlgorithm(c checksum.Type) Codec {
+func (self Codec) ChecksumHash(c checksum.Type) Codec {
 	self.checksum = checksum.Algorithm(c)
 	return self
 }
