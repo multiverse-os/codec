@@ -34,6 +34,21 @@ func (self Codec) String() string {
 	return fmt.Sprintf("ecoding=%s,compression=%s", self.encoding.String(), self.compression.String())
 }
 
+// Initialize Codec ////////////////////////////////////////////////////////////
+func EncodingFormat(encodingType encoding.Type) Codec {
+	return Codec{
+		encoding:    encoding.Format(encodingType),
+		compression: compression.Algorithm(compression.None),
+	}
+}
+
+func CompressionAlgorithm(c compression.Type) Codec {
+	return Codec{
+		encoding:    encoding.Format(encoding.Raw),
+		compression: compression.Algorithm(c),
+	}
+}
+
 // Chain-able codec defintion //////////////////////////////////////////////////
 func (self Codec) EncodingFormat(encodingType encoding.Type) Codec {
 	self.encoding = encoding.Format(encodingType)
