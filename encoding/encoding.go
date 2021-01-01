@@ -1,11 +1,11 @@
 package encoding
 
 import (
-	bson "github.com/multiverse-os/levelup/data/codec/encoding/bson"
-	cbor "github.com/multiverse-os/levelup/data/codec/encoding/cbor"
-	gob "github.com/multiverse-os/levelup/data/codec/encoding/gob"
-	json "github.com/multiverse-os/levelup/data/codec/encoding/json"
-	raw "github.com/multiverse-os/levelup/data/codec/encoding/raw"
+	bson "github.com/multiverse-os/codec/encoding/bson"
+	cbor "github.com/multiverse-os/codec/encoding/cbor"
+	gob "github.com/multiverse-os/codec/encoding/gob"
+	json "github.com/multiverse-os/codec/encoding/json"
+	raw "github.com/multiverse-os/codec/encoding/raw"
 )
 
 type Type int

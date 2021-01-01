@@ -1,10 +1,10 @@
 package compression
 
 import (
-	gzip "github.com/multiverse-os/levelup/data/codec/compression/gzip"
-	none "github.com/multiverse-os/levelup/data/codec/compression/none"
-	snappy "github.com/multiverse-os/levelup/data/codec/compression/snappy"
-	zstd "github.com/multiverse-os/levelup/data/codec/compression/zstd"
+	gzip "github.com/multiverse-os/codec/compression/gzip"
+	none "github.com/multiverse-os/codec/compression/none"
+	snappy "github.com/multiverse-os/codec/compression/snappy"
+	zstd "github.com/multiverse-os/codec/compression/zstd"
 )
 
 type Type int
