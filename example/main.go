@@ -3,9 +3,10 @@ package main
 import (
 	"fmt"
 
-	"github.com/multiverse-os/starshipyard/framework/datastore/codec"
-	"github.com/multiverse-os/starshipyard/framework/datastore/codec/compression"
-	"github.com/multiverse-os/starshipyard/framework/datastore/codec/encoding"
+	codec "github.com/multiverse-os/levelup/data/codec"
+
+	compression "github.com/multiverse-os/levelup/data/codec/compression"
+	encoding "github.com/multiverse-os/levelup/data/codec/encoding"
 )
 
 type TestObject struct {

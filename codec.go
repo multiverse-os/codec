@@ -3,9 +3,10 @@ package codec
 import (
 	"fmt"
 
-	checksum "github.com/multiverse-os/starshipyard/framework/datastore/codec/checksum"
-	compression "github.com/multiverse-os/starshipyard/framework/datastore/codec/compression"
-	encoding "github.com/multiverse-os/starshipyard/framework/datastore/codec/encoding"
+	checksum "github.com/multiverse-os/levelup/data/codec/checksum"
+	compression "github.com/multiverse-os/levelup/data/codec/compression"
+	encoding "github.com/multiverse-os/levelup/data/codec/encoding"
+	"github.com/multiverse-os/starshipyard/framework/datastore/leveldb/codec/crypto"
 )
 
 // MarshalUnmarshaler represents a codec used to marshal and unmarshal entities.
@@ -19,46 +20,60 @@ type MarshalUnmarshaler interface {
 ////////////////////////////////////////////////////////////////////////////////
 
 type Codec struct {
-	encoding    encoding.Codec
-	compression compression.Codec
-	checksum    checksum.Hash
+	encoding     encoding.Codec
+	compression  compression.Codec
+	checksum     checksum.Hash
+	cryptography crypto.Algorithm
 }
 
 // Initialization with raw/no compression, that can be defined
 func Initialize() Codec {
 	return Codec{
-		encoding:    encoding.Format(encoding.Raw),
-		compression: compression.Algorithm(compression.None),
-		checksum:    checksum.Algorithm(checksum.None),
+		encoding:     encoding.Format(encoding.Raw),
+		compression:  compression.Algorithm(compression.None),
+		checksum:     checksum.Algorithm(checksum.None),
+		cryptography: crypto.Algorithm(crypto.None),
 	}
 }
 
 func (self Codec) String() string {
-	return fmt.Sprintf("ecoding=%s,compression=%s", self.encoding.String(), self.compression.String())
+	return fmt.Sprintf("ecoding=%s,compression=%s,checksum=%s,cryptography=%s", self.encoding.String(), self.compression.String().self.checksum.String(), self.cryptography.String())
 }
 
 // Initialize Codec ////////////////////////////////////////////////////////////
 func EncodingFormat(encodingType encoding.Type) Codec {
 	return Codec{
-		encoding:    encoding.Format(encodingType),
-		compression: compression.Algorithm(compression.None),
-		checksum:    checksum.Algorithm(checksum.None),
+		encoding:     encoding.Format(encodingType),
+		compression:  compression.Algorithm(compression.None),
+		checksum:     checksum.Algorithm(checksum.None),
+		cryptography: crypto.Algorithm(crypto.None),
 	}
 }
 
 func CompressionAlgorithm(c compression.Type) Codec {
 	return Codec{
-		encoding:    encoding.Format(encoding.Raw),
-		compression: compression.Algorithm(c),
-		checksum:    checksum.Algorithm(checksum.None),
+		encoding:     encoding.Format(encoding.Raw),
+		compression:  compression.Algorithm(c),
+		checksum:     checksum.Algorithm(checksum.None),
+		cryptography: crypto.Algorithm(crypto.None),
 	}
 }
 
 func ChecksumHash(c checksum.Type) Codec {
 	return Codec{
-		encoding:    encoding.Format(encoding.Raw),
-		compression: compression.Algorithm(compression.None),
-		checksum:    checksum.Algorithm(c),
+		encoding:     encoding.Format(encoding.Raw),
+		compression:  compression.Algorithm(compression.None),
+		checksum:     checksum.Algorithm(c),
+		cryptography: crypto.Algorithm(crypto.None),
+	}
+}
+
+func CryptoAlgorithm(a crypto.Algorithm) Codec {
+	return Codec{
+		encoding:     encoding.Format(encoding.Raw),
+		compression:  compression.Algorithm(compression.None),
+		checksum:     checksum.Algorithm(checksum.None),
+		cryptography: crypto.Algorithm(a),
 	}
 }
 
@@ -73,8 +88,13 @@ func (self Codec) CompressionAlgorithm(c compression.Type) Codec {
 	return self
 }
 
-func (self Codec) ChecksumHash(c checksum.Type) Codec {
+func (self Codec) ChecksumAlgorithm(c checksum.Type) Codec {
 	self.checksum = checksum.Algorithm(c)
+	return self
+}
+
+func (self Codec) CryptoAlgorithm(a crypto.Algorithm) Codec {
+	self.cryptography = crypto.Algorithm(a)
 	return self
 }
 
@@ -98,6 +118,23 @@ func (self Codec) Uncompress(input []byte) ([]byte, error) {
 	return self.compression.Uncompress(input)
 }
 
+// Cryptography Functions //////////////////////////////////////////////////////
+func (self Codec) Encrypt(t crypto.Type, key, input []byte) ([]byte, error) {
+	return self.crypto.Encrypt(t, key, input)
+}
+
+func (self Codec) Decrypt(t crypto.Type, key, input []byte) ([]byte, error) {
+	return self.crypto.Decrypt(t, key, input)
+}
+
+func (self Codec) Sign(privateKey, input []byte) ([]byte, error) {
+	return self.crypto.PrivateKey(privateKey).Sign(input)
+}
+
+func (self Codec) VerifySignature(publicKey, input []byte) (bool, error) {
+	return self.crypto.PublicKey(publicKey).VerifySignature(input)
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 
 // Checksum ////////////////////////////////////////////////////////////////////
@@ -113,28 +150,43 @@ func (self Codec) Checksum(input []byte) []byte {
 
 ////////////////////////////////////////////////////////////////////////////////
 // No Codec Access /////////////////////////////////////////////////////////////
-
 func Encode(e encoding.Type, input interface{}) ([]byte, error) {
-	codec := encoding.Format(e)
-	return codec.Encode(input)
+	return encoding.Format(e).Encode(input)
 }
 
 func Decode(e encoding.Type, input []byte, value interface{}) error {
-	codec := encoding.Format(e)
-	return codec.Decode(input, value)
+	return encoding.Format(e).Decode(input, value)
 }
 
+//----------------------------------------------------------------------------//
 func Compress(c compression.Type, input []byte) ([]byte, error) {
-	codec := compression.Algorithm(c)
-	return codec.Compress(input)
+	return compression.Algorithm(c).Compress(input)
 }
 
 func Uncompress(c compression.Type, input []byte) ([]byte, error) {
-	codec := compression.Algorithm(c)
-	return codec.Uncompress(input)
+	return compression.Algorithm(c).Uncompress(input)
 }
 
+//----------------------------------------------------------------------------//
 func Checksum(c checksum.Type, input []byte) []byte {
-	hash := checksum.Algorithm(c)
-	return hash.Encode(input)
+	return checksum.Algorithm(c).Encode(input)
 }
+
+//----------------------------------------------------------------------------//
+func Encrypt(a crypto.Algorithm, t crypto.Type, key, input []byte) ([]byte, error) {
+	return crypto.Algorithm(a).Encrypt(t, key, input)
+}
+
+func Decrypt(a crypto.Algorithm, t crypto.Type, key, input []byte) ([]byte, error) {
+	return crypto.Algorithm(a).Decrypt(t, key, input)
+}
+
+func Sign(a crypto.Algorithm, privateKey, input []byte) ([]byte, error) {
+	return crypto.Algorithm(a).Encrypt(t, key, input)
+}
+
+func VerifySignature(a crypto.Algorithm, publicKey, input []byte) ([]byte, error) {
+	return crypto.Algorithm(a).Decrypt(t, key, input)
+}
+
+////////////////////////////////////////////////////////////////////////////////

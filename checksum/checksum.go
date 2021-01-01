@@ -1,9 +1,9 @@
 package checksum
 
 import (
-	none "github.com/multiverse-os/starshipyard/framework/datastore/leveldb/codec/checksum/none"
-	sha3 "github.com/multiverse-os/starshipyard/framework/datastore/leveldb/codec/checksum/sha3"
-	xxh64 "github.com/multiverse-os/starshipyard/framework/datastore/leveldb/codec/checksum/xxh64"
+	none "github.com/multiverse-os/levelup/data/codec/checksum/none"
+	sha3 "github.com/multiverse-os/levelup/data/codec/checksum/sha3"
+	xxh64 "github.com/multiverse-os/levelup/data/codec/checksum/xxh64"
 )
 
 type Type int
