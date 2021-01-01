@@ -6,6 +6,13 @@ type (
 	Hash    []byte
 )
 
+type Type int
+
+const (
+	Assymetric Type = iota
+	Symmetric
+)
+
 type Key interface {
 	PublicKey() []byte
 	PrivateKey() []byte

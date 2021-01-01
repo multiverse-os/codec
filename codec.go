@@ -3,10 +3,10 @@ package codec
 import (
 	"fmt"
 
-	checksum "github.com/multiverse-os/levelup/data/codec/checksum"
-	compression "github.com/multiverse-os/levelup/data/codec/compression"
-	encoding "github.com/multiverse-os/levelup/data/codec/encoding"
-	"github.com/multiverse-os/starshipyard/framework/datastore/leveldb/codec/crypto"
+	checksum "github.com/multiverse-os/codec/checksum"
+	compression "github.com/multiverse-os/codec/compression"
+	crypto "github.com/multiverse-os/codec/crypto"
+	encoding "github.com/multiverse-os/codec/encoding"
 )
 
 // MarshalUnmarshaler represents a codec used to marshal and unmarshal entities.
@@ -20,60 +20,56 @@ type MarshalUnmarshaler interface {
 ////////////////////////////////////////////////////////////////////////////////
 
 type Codec struct {
-	encoding     encoding.Codec
-	compression  compression.Codec
-	checksum     checksum.Hash
-	cryptography crypto.Algorithm
+	encoding    encoding.Codec
+	compression compression.Codec
+	checksum    checksum.Hash
+	cipher      crypto.Cipher
 }
 
 // Initialization with raw/no compression, that can be defined
 func Initialize() Codec {
 	return Codec{
-		encoding:     encoding.Format(encoding.Raw),
-		compression:  compression.Algorithm(compression.None),
-		checksum:     checksum.Algorithm(checksum.None),
-		cryptography: crypto.Algorithm(crypto.None),
+		encoding:    encoding.Format(encoding.Raw),
+		compression: compression.Algorithm(compression.None),
+		checksum:    checksum.Algorithm(checksum.None),
 	}
 }
 
 func (self Codec) String() string {
-	return fmt.Sprintf("ecoding=%s,compression=%s,checksum=%s,cryptography=%s", self.encoding.String(), self.compression.String().self.checksum.String(), self.cryptography.String())
+	return fmt.Sprintf("ecoding=%s,compression=%s,checksum=%s,crypto-cipher=%s", self.encoding.String(), self.compression.String(), self.checksum.String(), self.cipher.String())
 }
 
 // Initialize Codec ////////////////////////////////////////////////////////////
 func EncodingFormat(encodingType encoding.Type) Codec {
 	return Codec{
-		encoding:     encoding.Format(encodingType),
-		compression:  compression.Algorithm(compression.None),
-		checksum:     checksum.Algorithm(checksum.None),
-		cryptography: crypto.Algorithm(crypto.None),
+		encoding:    encoding.Format(encodingType),
+		compression: compression.Algorithm(compression.None),
+		checksum:    checksum.Algorithm(checksum.None),
 	}
 }
 
 func CompressionAlgorithm(c compression.Type) Codec {
 	return Codec{
-		encoding:     encoding.Format(encoding.Raw),
-		compression:  compression.Algorithm(c),
-		checksum:     checksum.Algorithm(checksum.None),
-		cryptography: crypto.Algorithm(crypto.None),
+		encoding:    encoding.Format(encoding.Raw),
+		compression: compression.Algorithm(c),
+		checksum:    checksum.Algorithm(checksum.None),
 	}
 }
 
 func ChecksumHash(c checksum.Type) Codec {
 	return Codec{
-		encoding:     encoding.Format(encoding.Raw),
-		compression:  compression.Algorithm(compression.None),
-		checksum:     checksum.Algorithm(c),
-		cryptography: crypto.Algorithm(crypto.None),
+		encoding:    encoding.Format(encoding.Raw),
+		compression: compression.Algorithm(compression.None),
+		checksum:    checksum.Algorithm(c),
 	}
 }
 
-func CryptoAlgorithm(a crypto.Algorithm) Codec {
+func Cipher(t crypto.Type, a crypto.Algorithm) Codec {
 	return Codec{
-		encoding:     encoding.Format(encoding.Raw),
-		compression:  compression.Algorithm(compression.None),
-		checksum:     checksum.Algorithm(checksum.None),
-		cryptography: crypto.Algorithm(a),
+		encoding:    encoding.Format(encoding.Raw),
+		compression: compression.Algorithm(compression.None),
+		checksum:    checksum.Algorithm(checksum.None),
+		cipher:      crypto.Cipher(t, a),
 	}
 }
 
@@ -93,8 +89,8 @@ func (self Codec) ChecksumAlgorithm(c checksum.Type) Codec {
 	return self
 }
 
-func (self Codec) CryptoAlgorithm(a crypto.Algorithm) Codec {
-	self.cryptography = crypto.Algorithm(a)
+func (self Codec) Cipher(t crypto.Type, a crypto.Algorithm) Codec {
+	self.cipher = crypto.Cipher(t, a)
 	return self
 }
 
@@ -120,19 +116,19 @@ func (self Codec) Uncompress(input []byte) ([]byte, error) {
 
 // Cryptography Functions //////////////////////////////////////////////////////
 func (self Codec) Encrypt(t crypto.Type, key, input []byte) ([]byte, error) {
-	return self.crypto.Encrypt(t, key, input)
+	return self.cipher.Type(t).Encrypt(key, input)
 }
 
 func (self Codec) Decrypt(t crypto.Type, key, input []byte) ([]byte, error) {
-	return self.crypto.Decrypt(t, key, input)
+	return self.cipher.Type(t).Decrypt(key, input)
 }
 
 func (self Codec) Sign(privateKey, input []byte) ([]byte, error) {
-	return self.crypto.PrivateKey(privateKey).Sign(input)
+	return self.cipher.PrivateKey(privateKey).Sign(input)
 }
 
 func (self Codec) VerifySignature(publicKey, input []byte) (bool, error) {
-	return self.crypto.PublicKey(publicKey).VerifySignature(input)
+	return self.cipher.PublicKey(publicKey).VerifySignature(input)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -174,19 +170,19 @@ func Checksum(c checksum.Type, input []byte) []byte {
 
 //----------------------------------------------------------------------------//
 func Encrypt(a crypto.Algorithm, t crypto.Type, key, input []byte) ([]byte, error) {
-	return crypto.Algorithm(a).Encrypt(t, key, input)
+	return crypto.Cipher(t, a).Encrypt(key, input)
 }
 
 func Decrypt(a crypto.Algorithm, t crypto.Type, key, input []byte) ([]byte, error) {
-	return crypto.Algorithm(a).Decrypt(t, key, input)
+	return crypto.Cipher(t, a).Decrypt(key, input)
 }
 
 func Sign(a crypto.Algorithm, privateKey, input []byte) ([]byte, error) {
-	return crypto.Algorithm(a).Encrypt(t, key, input)
+	return crypto.Cipher(crypto.Assymetric, a).Sign(privateKey, input)
 }
 
-func VerifySignature(a crypto.Algorithm, publicKey, input []byte) ([]byte, error) {
-	return crypto.Algorithm(a).Decrypt(t, key, input)
+func VerifySignature(a crypto.Algorithm, publicKey, input []byte) (bool, error) {
+	return crypto.Cipher(crypto.Assymetric, a).VerifySignature(publicKey, input)
 }
 
 ////////////////////////////////////////////////////////////////////////////////

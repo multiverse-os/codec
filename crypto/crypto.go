@@ -1,5 +1,7 @@
 package crypto
 
+import "github.com/multiverse-os/starshipyard/framework/datastore/leveldb/codec/crypto/key"
+
 type Type int
 
 const (
@@ -14,6 +16,10 @@ func (self Type) String() string {
 	default: // Assymetric
 		return "assymetric"
 	}
+}
+
+func Cipher(cipherType Type, algorithm Algorithm) key.Cipher {
+	return key.Cipher{Type: cipherType, Algorithm: algorithm}
 }
 
 //type CryptographicKey interface {

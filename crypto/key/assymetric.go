@@ -6,28 +6,8 @@ import (
 	argon2 "golang.org/x/crypto/argon2"
 )
 
-type Algorithm struct {
-	Type       AlgorithmType
-	Parameters map[string]int
-}
-
-type AlgorithmType int
-
-const (
-	Argon2 AlgorithmType = iota
-	Bcrypt
-)
-
-type AccessType int
-
-const (
-	RootKey AccessType = iota
-	SessionKey
-)
-
 type Keypair struct {
-	Type      AccessType
-	Algorithm Algorithm
+	Cipher
 
 	Salt []byte
 
@@ -48,7 +28,14 @@ func (self Keypair) Params(name string) int {
 func (self Keypair) GeneratePublicKey() []byte {
 	switch self.Algorithm.Type {
 	case Argon2:
-		return argon2.IDKey(self.PrivateKey, self.Salt, self.Params("iterations"), self.Params("memory"), self.Params("threads"), self.Params("length"))
+		return argon2.IDKey(
+			self.PrivateKey,
+			self.Salt,
+			uint32(self.Params("iterations")),
+			uint32(self.Params("memory")),
+			uint8(self.Params("threads")),
+			uint32(self.Params("length")),
+		)
 	default:
 		return []byte{}
 	}

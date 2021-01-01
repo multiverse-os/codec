@@ -3,10 +3,9 @@ package main
 import (
 	"fmt"
 
-	codec "github.com/multiverse-os/levelup/data/codec"
-
-	compression "github.com/multiverse-os/levelup/data/codec/compression"
-	encoding "github.com/multiverse-os/levelup/data/codec/encoding"
+	codec "github.com/multiverse-os/codec"
+	compression "github.com/multiverse-os/codec/compression"
+	encoding "github.com/multiverse-os/codec/encoding"
 )
 
 type TestObject struct {

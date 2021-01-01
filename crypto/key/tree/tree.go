@@ -8,6 +8,13 @@ package key
 
 // TODO: Or should it be key.Graph? Probably graph since we want to model
 // myclellium. Growing out in all directions
+type AccessType int
+
+const (
+	RootKey AccessType = iota
+	SessionKey
+)
+
 type Tree struct {
 	Root *Keypair
 
