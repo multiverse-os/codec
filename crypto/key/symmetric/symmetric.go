@@ -5,6 +5,7 @@ type Algorithm int
 const (
 	Argon2 Algorithm = iota
 	BCrypt
+	PBKDF2
 	SCrypt
 	DES
 	TripleDES
@@ -21,7 +22,7 @@ func (Algorithm) IsSymmetric() bool  { return false }
 
 func Algorithms() []Algorithm {
 	return []Algorithm{
-		Argon2,
+		PBKDF2,
 		BCrypt,
 		SCrypt,
 		DES,
@@ -32,15 +33,16 @@ func Algorithms() []Algorithm {
 		ChaCha20,
 		RC6,
 		CAST,
+		Argon2,
 	}
 }
 
 func (self Algorithm) String() string {
 	switch self {
-	case Argon2:
-		return "Argon2"
 	case BCrypt:
 		return "BCrypt"
+	case PBKDF2:
+		return "PBKDF2"
 	case SCrypt:
 		return "SCrypt"
 	case DES:

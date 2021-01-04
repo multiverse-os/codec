@@ -1,45 +1,64 @@
 package symmetric
 
 import (
-	"time"
-
-	"golang.org/x/crypto/bcrypt"
+	"crypto/rand"
+	"fmt"
+	"io"
 )
 
 ////////////////////////////////////////////////////////////////////////////////
-// Asymmetric / Symmetric Key Functions
-////////////////////////////////////////////////////////////////////////////////
-type Key struct {
-	Salt          []byte
-	LastUpdatedAt time.Time
-	MinimumLength int
-	MaximumLength int
+func (self Algorithm) SaltLength() int {
+	switch self {
+	case Argon2:
+		return 32
+	case BCrypt:
+		return 32
+	case PBKDF2:
+		return 32
+	default:
+		return 32
+	}
 }
 
-func (self Key) Encrypt(plainText []byte) ([]byte, error)  { return []byte{}, nil }
-func (self Key) Decrypt(cipherText []byte) ([]byte, error) { return []byte{}, nil }
+func (self Algorithm) HashLength() int {
+	switch self {
+	case Argon2:
+		return 64
+	case BCrypt:
+		return 64
+	case PBKDF2:
+		return 64
+	default:
+		return 64
+	}
+}
 
-func (self Key) Sign(input []byte) ([]byte, error) { return []byte{}, nil }
-func (self Key) Verify(input []byte) (bool, error) { return false, nil }
+////////////////////////////////////////////////////////////////////////////////
+type Variant int
+
+////////////////////////////////////////////////////////////////////////////////
+type PasswordHash struct {
+	Variant Variant
+	Cost    int
+	Salt    []byte
+	Hash    []byte
+}
+
+func (self PasswordHash) Valid() (bool, error) { return true, nil }
+func (self PasswordHash) String() string       { return fmt.Sprintf("") }
+
+func (self PasswordHash) RandomSalt() []byte {
+	salt := make([]byte, len(self.Salt))
+	if _, err := io.ReadFull(rand.Reader, salt); err != nil {
+		panic("error reading from random source: " + err.Error())
+	}
+	return salt
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 // Symmetric Key Functions
 ////////////////////////////////////////////////////////////////////////////////
-type SymmetricKey struct {
-	//Hash(password string) (
-}
-
-type CryptoInt interface {
-	HashPassword(password string) (string, error)
-	CheckPasswordHash(password, hash string) bool
-}
-
-func (crp *Crypto) HashPassword(password string) (string, error) {
-	bytes, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
-	return string(bytes), err
-}
-
-func (crp *Crypto) CheckPasswordHash(password, hash string) bool {
-	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
-	return err == nil
+type SymmetricKey interface {
+	PasswordHash(password string) ([]byte, error)
+	IsPasswordValid(password string) (bool, error)
 }

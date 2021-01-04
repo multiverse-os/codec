@@ -14,13 +14,15 @@ const (
 	intType
 	floatType
 	boolType
+	byteSliceType
 )
 
 type dataValue struct {
-	stringValue  string
-	integerValue int
-	floatValue   float64
-	booleanValue bool
+	stringValue    string
+	integerValue   int
+	floatValue     float64
+	booleanValue   bool
+	byteSliceValue []byte
 }
 
 type Value struct {
@@ -54,11 +56,17 @@ func (self Params) AddBoolean(key string, value bool) Params {
 	return self
 }
 
+func (self Params) AddBytes(key string, value []byte) Params {
+	self[hashKey(key)] = Bytes(value)
+	return self
+}
+
 // GET Parameter ///////////////////////////////////////////////////////////////
 func (self Params) String(key string) string { return self[hashKey(key)].stringValue }
 func (self Params) Integer(key string) int   { return self[hashKey(key)].integerValue }
 func (self Params) Float(key string) float64 { return self[hashKey(key)].floatValue }
 func (self Params) Boolean(key string) bool  { return self[hashKey(key)].booleanValue }
+func (self Params) Bytes(key string) []byte  { return self[hashKey(key)].byteSliceValue }
 
 ////////////////////////////////////////////////////////////////////////////////
 func String(value string) Value {
@@ -93,6 +101,15 @@ func Boolean(value bool) Value {
 		dataType: boolType,
 		dataValue: dataValue{
 			booleanValue: value,
+		},
+	}
+}
+
+func Bytes(value []byte) Value {
+	return Value{
+		dataType: byteSliceType,
+		dataValue: dataValue{
+			byteSliceType: value,
 		},
 	}
 }
