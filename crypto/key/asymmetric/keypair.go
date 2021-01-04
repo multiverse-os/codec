@@ -1,40 +1,45 @@
 package asymmetric
 
-////////////////////////////////////////////////////////////////////////////////
+import "github.com/multiverse-os/codec/crypto/key/symmetric"
+
+type Permissions struct {
+	Sign   bool
+	Subkey bool
+}
+
+type PrivateKey struct {
+	Key        []byte
+	Fingerpint []byte
+	Key        symmetric.Key
+}
+
+type PublicKey struct {
+	Key        []byte
+	Fingerpint []byte
+}
+
+type Contact struct {
+	Name    string
+	Email   string
+	Comment string
+}
 
 type Keypair struct {
-	privateKey []byte
-	publicKey  []byte
+	PublicKey  PublicKey
+	PrivateKey PrivateKey
+
+	Contact
+	Permissions
+
+	// NOTE: Symmetrically encrypt the private key
+	Password string
+
+	Parent  *Keypair
+	Subkeys []*Keypair
 }
 
-////////////////////////////////////////////////////////////////////////////////
-func (self Keypair) PublicKey(publicKey []byte) Keypair {
-	self.publicKey = publicKey
-	return self
-}
+func (self Keypair) Encrypt(plainText []byte) ([]byte, error)  { return []byte{}, nil }
+func (self Keypair) Decrypt(cipherText []byte) ([]byte, error) { return []byte{}, nil }
 
-func (self Keypair) PrivateKey(privateKey []byte) Keypair {
-	self.privateKey = privateKey
-	return self
-}
-
-////////////////////////////////////////////////////////////////////////////////
-func (self Keypair) Cryptosystem() string {
-	return "asymmetric"
-}
-
-func (self Keypair) Encrypt(input []byte) ([]byte, error) {
-	return []byte{}, nil
-}
-
-func (self Keypair) Decrypt(input []byte) ([]byte, error) {
-	return []byte{}, nil
-}
-
-func (self Keypair) Sign(input []byte) ([]byte, error) {
-	return []byte{}, nil
-}
-
-func (self Keypair) Verify(input []byte) (bool, error) {
-	return false, nil
-}
+func (self Keypair) Sign(input []byte) ([]byte, error) { return []byte{}, nil }
+func (self Keypair) Verify(input []byte) (bool, error) { return false, nil }

@@ -1,35 +1,9 @@
 package symmetric
 
-////////////////////////////////////////////////////////////////////////////////
-type Key struct {
-	Secret []byte
-}
+type Key struct{}
 
-////////////////////////////////////////////////////////////////////////////////
-func (self Key) SecretKey(secretKey []byte) Key {
-	self.Secret = secretKey
-	return self
-}
+func (self Key) Encrypt(plainText []byte) ([]byte, error)  { return []byte{}, nil }
+func (self Key) Decrypt(cipherText []byte) ([]byte, error) { return []byte{}, nil }
 
-////////////////////////////////////////////////////////////////////////////////
-func (self Key) Cryptosystem() string {
-	return "symmetric"
-}
-
-func (self Key) Encrypt(input []byte) ([]byte, error) {
-	return []byte{}, nil
-}
-
-func (self Key) Decrypt(input []byte) ([]byte, error) {
-	return []byte{}, nil
-}
-
-func (self Key) Sign(input []byte) ([]byte, error) {
-	return []byte{}, nil
-}
-
-func (self Key) Verify(input []byte) (bool, error) {
-	return false, nil
-}
-
-////////////////////////////////////////////////////////////////////////////////
+func (self Key) Sign(input []byte) ([]byte, error) { return []byte{}, nil }
+func (self Key) Verify(input []byte) (bool, error) { return false, nil }

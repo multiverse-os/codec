@@ -3,6 +3,7 @@ package crypto
 import (
 	"fmt"
 
+	"github.com/multiverse-os/codec/crypto/key"
 	asymmetric "github.com/multiverse-os/codec/crypto/key/asymmetric"
 	symmetric "github.com/multiverse-os/codec/crypto/key/symmetric"
 	params "github.com/multiverse-os/codec/crypto/params"
@@ -20,12 +21,12 @@ type Key interface {
 ////////////////////////////////////////////////////////////////////////////////
 type cipher struct {
 	Key
-	Algorithm Algorithm
+	Algorithm key.Algorithm
 	Params    params.Params
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-func Cipher(a Algorithm) cipher {
+func Cipher(a key.Algorithm) cipher {
 	var key Key
 	if a.IsAsymmetric() {
 		fmt.Println("algorithm is asymmetric")

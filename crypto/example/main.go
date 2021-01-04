@@ -39,4 +39,8 @@ func main() {
 	fmt.Println("      cipher.String(\"test\")")
 	fmt.Println("string with name test:", cipher.String("test"))
 
+	argon2Cipher := crypto.Cipher(crypto.Argon2)
+
+	argon2Cipher.Params = argon2.DefaultParams(argon2Cipher.Params)
+
 }
