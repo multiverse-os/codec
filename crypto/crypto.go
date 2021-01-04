@@ -1,69 +1,79 @@
 package crypto
 
-import "github.com/multiverse-os/starshipyard/framework/datastore/leveldb/codec/crypto/key"
+import (
+	"fmt"
 
-type Type int
-
-const (
-	Assymetric Type = iota
-	Symmetric
+	asymmetric "github.com/multiverse-os/codec/crypto/key/asymmetric"
+	symmetric "github.com/multiverse-os/codec/crypto/key/symmetric"
+	params "github.com/multiverse-os/codec/crypto/params"
 )
 
-func (self Type) String() string {
-	switch self {
-	case Symmetric:
-		return "symetric"
-	default: // Assymetric
-		return "assymetric"
+////////////////////////////////////////////////////////////////////////////////
+type Key interface {
+	Encrypt(plainText []byte) ([]byte, error)
+	Decrypt(cipherText []byte) ([]byte, error)
+
+	Sign(input []byte) ([]byte, error)
+	Verify(input []byte) (bool, error)
+}
+
+////////////////////////////////////////////////////////////////////////////////
+type cipher struct {
+	Key
+	Algorithm Algorithm
+	Params    params.Params
+}
+
+////////////////////////////////////////////////////////////////////////////////
+func Cipher(a Algorithm) cipher {
+	var key Key
+	if a.IsAsymmetric() {
+		fmt.Println("algorithm is asymmetric")
+		key = asymmetric.Keypair{}
+	} else {
+		fmt.Println("algorithm is symmetric")
+		key = symmetric.Key{}
+	}
+	return cipher{
+		Algorithm: a,
+		Key:       key,
+		Params:    make(params.Params),
 	}
 }
 
-func Cipher(cipherType Type, algorithm Algorithm) key.Cipher {
-	return key.Cipher{Type: cipherType, Algorithm: algorithm}
+// PARAMS //////////////////////////////////////////////////////////////////////
+func (self cipher) String(name string) string { return self.Params.String(name) }
+func (self cipher) Integer(name string) int   { return self.Params.Integer(name) }
+func (self cipher) Float(name string) float64 { return self.Params.Float(name) }
+func (self cipher) Boolean(name string) bool  { return self.Params.Boolean(name) }
+
+func (self cipher) AddString(name string, value string) cipher {
+	self.Params.AddString(name, value)
+	return self
 }
 
-//type CryptographicKey interface {
-//	GenerateChildKey() key.Pair
-//	// NOTE: Derive a SSH, Bitcoin or other key deterministically (incrementable)
-//	//       from any key type, for example: Use a PGP key to generate your SSH
-//	//       keys on all your remote machines.
-//	DeriveKeypair(algorithm Algorithm) Keypair
-//
-//	OneTimePassword(otpType OTPType) []byte
-//
-//	ExpiresAt(expiresAt time.Time) Keypair
-//	Name(name string) Keypair
-//	ContactURI(contact string) Keypair
-//	Password(symmetricEncryption string) Keypair
-//
-//	Algorithm() string
-//
-//	Encrypt(input []byte) ([]byte, error)
-//	Decrypt(input []byte) ([]byte, error)
-//
-//	Sign(input []byte) ([]byte, error)
-//	VerifySignature(input []byte) (bool, error)
-//
-//	SplitKey() []KeyPart
-//	AssembleKey(keyParts ...KeyPart) Keypair
-//
-//	GenerateToken(expiresAt time.Time) Token
-//	GenerateCertificate(expiresAt time.Time) Certificate
-//}
-//
-//func GenerateKey(algorithm AlgorithmType, seed []byte) (Keypair, error) {
-//	switch algorithm {
-//	case Argon2:
-//		keypair := Keypair{
-//			Algorithm: Algorithm{
-//				Type:   algorithm,
-//				Params: argon2.DefaultParams(),
-//			},
-//		}
-//
-//		return keypair
-//
-//	default:
-//		return Keypair{}, fmt.Errorf("invalid algorithm")
-//	}
+func (self cipher) AddInteger(name string, value int) cipher {
+	self.Params.AddInteger(name, value)
+	return self
+}
+
+func (self cipher) AddFloat(name string, value float64) cipher {
+	self.Params.AddFloat(name, value)
+	return self
+}
+
+func (self cipher) AddBoolean(name string, value bool) cipher {
+	self.Params.AddBoolean(name, value)
+	return self
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//func GenerateKey(a algorithm.Type, seed []byte) (key.Key, error) {
+//	//return symmetric.Key{
+//	//	Algorithm: a,
+//	//}, nil
+//	//return asymmetric.Keypair{
+//	//	Algorithm: a,
+//	//}, nil
+//	return key.Key{}, nil
 //}

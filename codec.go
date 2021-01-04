@@ -20,10 +20,10 @@ type MarshalUnmarshaler interface {
 ////////////////////////////////////////////////////////////////////////////////
 
 type Codec struct {
-	encoding    encoding.Codec
-	compression compression.Codec
-	checksum    checksum.Hash
-	cipher      crypto.Cipher
+	encoding     encoding.Codec
+	compression  compression.Codec
+	checksum     checksum.Hash
+	cryptography crypto.Cipher
 }
 
 // Initialization with raw/no compression, that can be defined
@@ -36,7 +36,7 @@ func Initialize() Codec {
 }
 
 func (self Codec) String() string {
-	return fmt.Sprintf("ecoding=%s,compression=%s,checksum=%s,crypto-cipher=%s", self.encoding.String(), self.compression.String(), self.checksum.String(), self.cipher.String())
+	return fmt.Sprintf("ecoding=%s,compression=%s,checksum=%s,cryptography=%s", self.encoding.String(), self.compression.String(), self.checksum.String(), self.cryptoraphy.String())
 }
 
 // Initialize Codec ////////////////////////////////////////////////////////////
@@ -64,12 +64,12 @@ func ChecksumHash(c checksum.Type) Codec {
 	}
 }
 
-func Cipher(t crypto.Type, a crypto.Algorithm) Codec {
+func CryptoSystem(a crypto.Algorithm) Codec {
 	return Codec{
-		encoding:    encoding.Format(encoding.Raw),
-		compression: compression.Algorithm(compression.None),
-		checksum:    checksum.Algorithm(checksum.None),
-		cipher:      crypto.Cipher(t, a),
+		encoding:     encoding.Format(encoding.Raw),
+		compression:  compression.Algorithm(compression.None),
+		checksum:     checksum.Algorithm(checksum.None),
+		cryptography: crypto.Cipher(a),
 	}
 }
 
@@ -90,7 +90,7 @@ func (self Codec) ChecksumAlgorithm(c checksum.Type) Codec {
 }
 
 func (self Codec) Cipher(t crypto.Type, a crypto.Algorithm) Codec {
-	self.cipher = crypto.Cipher(t, a)
+	self.cryptography = crypto.Cipher(t, a)
 	return self
 }
 
@@ -115,20 +115,20 @@ func (self Codec) Uncompress(input []byte) ([]byte, error) {
 }
 
 // Cryptography Functions //////////////////////////////////////////////////////
-func (self Codec) Encrypt(t crypto.Type, key, input []byte) ([]byte, error) {
-	return self.cipher.Type(t).Encrypt(key, input)
+func (self Codec) Encrypt(t crypto.System, key, input []byte) ([]byte, error) {
+	return self.cryptography.Type(t).Encrypt(key, input)
 }
 
-func (self Codec) Decrypt(t crypto.Type, key, input []byte) ([]byte, error) {
-	return self.cipher.Type(t).Decrypt(key, input)
+func (self Codec) Decrypt(t crypto.System, key, input []byte) ([]byte, error) {
+	return self.cryptography.Type(t).Decrypt(key, input)
 }
 
 func (self Codec) Sign(privateKey, input []byte) ([]byte, error) {
-	return self.cipher.PrivateKey(privateKey).Sign(input)
+	return self.cryptography.PrivateKey(privateKey).Sign(input)
 }
 
 func (self Codec) VerifySignature(publicKey, input []byte) (bool, error) {
-	return self.cipher.PublicKey(publicKey).VerifySignature(input)
+	return self.cryptography.PublicKey(publicKey).VerifySignature(input)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -178,11 +178,11 @@ func Decrypt(a crypto.Algorithm, t crypto.Type, key, input []byte) ([]byte, erro
 }
 
 func Sign(a crypto.Algorithm, privateKey, input []byte) ([]byte, error) {
-	return crypto.Cipher(crypto.Assymetric, a).Sign(privateKey, input)
+	return crypto.Cipher(crypto.Asymmetric, a).Sign(privateKey, input)
 }
 
 func VerifySignature(a crypto.Algorithm, publicKey, input []byte) (bool, error) {
-	return crypto.Cipher(crypto.Assymetric, a).VerifySignature(publicKey, input)
+	return crypto.Cipher(crypto.Asy, metric, a).VerifySignature(publicKey, input)
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -1,5 +1,9 @@
 package argon2
 
+import (
+	params "github.com/multiverse-os/codec/crypto/params"
+)
+
 //GenerateKey(seed string) Keypair
 //GenerateRandomKey() Keypair
 //type Functionality interface {
@@ -27,11 +31,9 @@ func GenerateKey(seed []byte) Keypair {
 	return Keypair{}
 }
 
-func DefaultParams() map[string]int {
-	return map[string]int{
-		"memory":     16384,
-		"iterations": 3,
-		"threads":    2,
-		"Length":     32,
-	}
+func DefaultParams(params params.Value) params.Value {
+	params.AddInteger("memory", 16384)
+	params.AddInteger("iterators", 3)
+	params.AddInteger("threads", 2)
+	params.AddInteger("length", 32)
 }

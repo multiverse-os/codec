@@ -12,13 +12,31 @@ func main() {
 	fmt.Println("an advanced cryptogrpahic library that provides a wide range")
 	fmt.Println("of functionality for algorithms that do not commonly support it")
 
-	keypair, err := crypto.GenerateKeypair(algorithm.Argon2, []byte("test"))
-	if err != nil {
-		fmt.Println("[error] what the error:", err)
+	argon2 := crypto.Argon2
+	fmt.Println("cryptosystem:", argon2)
+	if argon2.IsSymmetric() {
+		fmt.Println("IS SYMMETRIC")
+	} else {
+		fmt.Println("IS ASYMMETRIC")
 	}
 
-	fmt.Println("keypair.Algorithm.String():", keypair.Algorithm.String())
-	fmt.Println("keypair.PrivateKey():", keypair.PrivateKey())
-	fmt.Println("keypair.PublicKey():", keypair.PublicKey())
+	rsa := crypto.RSA
+	fmt.Println("cryptosystem:", rsa)
+	if rsa.IsSymmetric() {
+		fmt.Println("IS SYMMETRIC")
+	} else {
+		fmt.Println("IS ASYMMETRIC")
+	}
+
+	cipher := crypto.Cipher(crypto.RSA)
+
+	fmt.Println("Adding data to our cipher that can be used to configure the")
+	fmt.Println("the encryption.\n")
+	fmt.Println("      cipher.AddString(\"test\", \"test\")\n")
+	cipher.AddString("test", "test")
+
+	fmt.Println("Now trying to pull the data out:")
+	fmt.Println("      cipher.String(\"test\")")
+	fmt.Println("string with name test:", cipher.String("test"))
 
 }
