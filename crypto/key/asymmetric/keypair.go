@@ -1,7 +1,5 @@
 package asymmetric
 
-import "github.com/multiverse-os/codec/crypto/key/symmetric"
-
 type Permissions struct {
 	Sign   bool
 	Subkey bool
@@ -10,7 +8,6 @@ type Permissions struct {
 type PrivateKey struct {
 	Key        []byte
 	Fingerpint []byte
-	Key        symmetric.Key
 }
 
 type PublicKey struct {

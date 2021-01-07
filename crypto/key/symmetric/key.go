@@ -7,6 +7,21 @@ import (
 )
 
 ////////////////////////////////////////////////////////////////////////////////
+type Key struct {
+	Algorithm Algorithm
+
+	Secret []byte
+
+	PasswordHash PasswordHash
+}
+
+func (self Key) Encrypt(plainText []byte) ([]byte, error)  { return []byte{}, nil }
+func (self Key) Decrypt(cipherText []byte) ([]byte, error) { return []byte{}, nil }
+
+func (self Key) Sign(input []byte) ([]byte, error) { return []byte{}, nil }
+func (self Key) Verify(input []byte) (bool, error) { return false, nil }
+
+////////////////////////////////////////////////////////////////////////////////
 func (self Algorithm) SaltLength() int {
 	switch self {
 	case Argon2:

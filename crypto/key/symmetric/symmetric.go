@@ -1,5 +1,7 @@
 package symmetric
 
+import "github.com/multiverse-os/codec/crypto/params"
+
 type Algorithm int
 
 const (
@@ -13,13 +15,9 @@ const (
 	Blowfish
 	Twofish
 	ChaCha20
-	RC6
-	CAST
 )
 
-func (Algorithm) IsAsymmetric() bool { return true }
-func (Algorithm) IsSymmetric() bool  { return false }
-
+////////////////////////////////////////////////////////////////////////////////
 func Algorithms() []Algorithm {
 	return []Algorithm{
 		PBKDF2,
@@ -31,11 +29,13 @@ func Algorithms() []Algorithm {
 		Blowfish,
 		Twofish,
 		ChaCha20,
-		RC6,
-		CAST,
 		Argon2,
 	}
 }
+
+////////////////////////////////////////////////////////////////////////////////
+func (Algorithm) IsAsymmetric() bool { return true }
+func (Algorithm) IsSymmetric() bool  { return false }
 
 func (self Algorithm) String() string {
 	switch self {
@@ -57,11 +57,11 @@ func (self Algorithm) String() string {
 		return "Twofish"
 	case ChaCha20:
 		return "ChaCha20"
-	case RC6:
-		return "RC6"
-	case CAST:
-		return "CAST"
 	default: // Argon2
 		return "Argon2"
 	}
+}
+
+func (Algorithm) DefaultParams(p params.Params) params.Params {
+	return p
 }

@@ -3,7 +3,7 @@ package crypto
 import (
 	"fmt"
 
-	"github.com/multiverse-os/codec/crypto/key"
+	key "github.com/multiverse-os/codec/crypto/key"
 	asymmetric "github.com/multiverse-os/codec/crypto/key/asymmetric"
 	symmetric "github.com/multiverse-os/codec/crypto/key/symmetric"
 	params "github.com/multiverse-os/codec/crypto/params"

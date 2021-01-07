@@ -1,13 +1,15 @@
 package asymmetric
 
+import (
+	params "github.com/multiverse-os/codec/crypto/params"
+)
+
 ////////////////////////////////////////////////////////////////////////////////
 type Algorithm int
 
 const (
 	RSA Algorithm = iota
 	ECC
-	ElGamal
-	DHKE
 	ECDH
 	DSA
 	ECDSA
@@ -17,8 +19,6 @@ const (
 func Algorithms() []Algorithm {
 	return []Algorithm{
 		ECC,
-		ElGamal,
-		DHKE,
 		ECDH,
 		DSA,
 		ECDSA,
@@ -33,10 +33,6 @@ func (self Algorithm) String() string {
 	switch self {
 	case ECC:
 		return "ECC"
-	case ElGamal:
-		return "ElGamal"
-	case DHKE:
-		return "DHKE"
 	case ECDH:
 		return "ECDH"
 	case DSA:
@@ -48,4 +44,8 @@ func (self Algorithm) String() string {
 	default: // RSA
 		return "RSA"
 	}
+}
+
+func (Algorithm) DefaultParams(p params.Params) params.Params {
+	return p
 }

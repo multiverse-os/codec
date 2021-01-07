@@ -109,7 +109,7 @@ func Bytes(value []byte) Value {
 	return Value{
 		dataType: byteSliceType,
 		dataValue: dataValue{
-			byteSliceType: value,
+			byteSliceValue: value,
 		},
 	}
 }

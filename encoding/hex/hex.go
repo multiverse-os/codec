@@ -1,4 +1,4 @@
-package json
+package hex
 
 import (
 	"encoding/base64"
@@ -6,14 +6,7 @@ import (
 
 type Type int
 
-const (
-	Standard Type = iota
-	URLSafe
-)
-
-type DataFormat struct {
-	Type Type
-}
+type DataFormat struct{}
 
 func (self DataFormat) Encode(obj interface{}) ([]byte, error) {
 	var encodedData string
