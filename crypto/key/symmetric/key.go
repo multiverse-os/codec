@@ -15,6 +15,8 @@ type Key struct {
 	PasswordHash PasswordHash
 }
 
+func (self Key) String() string { return self.Algorithm.String() }
+
 func (self Key) Encrypt(plainText []byte) ([]byte, error)  { return []byte{}, nil }
 func (self Key) Decrypt(cipherText []byte) ([]byte, error) { return []byte{}, nil }
 

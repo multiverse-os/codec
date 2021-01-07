@@ -19,14 +19,14 @@ type Key interface {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-type cipher struct {
-	Key
-	Algorithm key.Algorithm
+type Cipher struct {
+	Key       Key
+	Algorithm Algorithm
 	Params    params.Params
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-func Cipher(a key.Algorithm) cipher {
+func CryptoSystem(a key.Algorithm) Cipher {
 	var key Key
 	if a.IsAsymmetric() {
 		fmt.Println("algorithm is asymmetric")
@@ -35,35 +35,37 @@ func Cipher(a key.Algorithm) cipher {
 		fmt.Println("algorithm is symmetric")
 		key = symmetric.Key{}
 	}
-	return cipher{
+	return Cipher{
 		Algorithm: a,
 		Key:       key,
 		Params:    make(params.Params),
 	}
 }
 
-// PARAMS //////////////////////////////////////////////////////////////////////
-func (self cipher) String(name string) string { return self.Params.String(name) }
-func (self cipher) Integer(name string) int   { return self.Params.Integer(name) }
-func (self cipher) Float(name string) float64 { return self.Params.Float(name) }
-func (self cipher) Boolean(name string) bool  { return self.Params.Boolean(name) }
+////////////////////////////////////////////////////////////////////////////////
 
-func (self cipher) AddString(name string, value string) cipher {
+// PARAMS //////////////////////////////////////////////////////////////////////
+func (self Cipher) String(name string) string { return self.Params.String(name) }
+func (self Cipher) Integer(name string) int   { return self.Params.Integer(name) }
+func (self Cipher) Float(name string) float64 { return self.Params.Float(name) }
+func (self Cipher) Boolean(name string) bool  { return self.Params.Boolean(name) }
+
+func (self Cipher) AddString(name string, value string) Cipher {
 	self.Params.AddString(name, value)
 	return self
 }
 
-func (self cipher) AddInteger(name string, value int) cipher {
+func (self Cipher) AddInteger(name string, value int) Cipher {
 	self.Params.AddInteger(name, value)
 	return self
 }
 
-func (self cipher) AddFloat(name string, value float64) cipher {
+func (self Cipher) AddFloat(name string, value float64) Cipher {
 	self.Params.AddFloat(name, value)
 	return self
 }
 
-func (self cipher) AddBoolean(name string, value bool) cipher {
+func (self Cipher) AddBoolean(name string, value bool) Cipher {
 	self.Params.AddBoolean(name, value)
 	return self
 }

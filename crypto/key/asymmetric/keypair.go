@@ -22,6 +22,8 @@ type Contact struct {
 }
 
 type Keypair struct {
+	Algorithm Algorithm
+
 	PublicKey  PublicKey
 	PrivateKey PrivateKey
 
@@ -34,6 +36,8 @@ type Keypair struct {
 	Parent  *Keypair
 	Subkeys []*Keypair
 }
+
+func (self Keypair) String() string { return self.Algorithm.String() }
 
 func (self Keypair) Encrypt(plainText []byte) ([]byte, error)  { return []byte{}, nil }
 func (self Keypair) Decrypt(cipherText []byte) ([]byte, error) { return []byte{}, nil }
