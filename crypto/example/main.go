@@ -28,7 +28,7 @@ func main() {
 		fmt.Println("IS ASYMMETRIC")
 	}
 
-	cipher := crypto.Cipher(crypto.RSA)
+	cipher := crypto.AsymmetricKey(crypto.RSA)
 
 	fmt.Println("Adding data to our cipher that can be used to configure the")
 	fmt.Println("the encryption.\n")
@@ -39,7 +39,7 @@ func main() {
 	fmt.Println("      cipher.String(\"test\")")
 	fmt.Println("string with name test:", cipher.String("test"))
 
-	argon2Cipher := crypto.Cipher(crypto.Argon2)
+	argon2Cipher := crypto.SymmetricKey(crypto.Argon2)
 
 	argon2Cipher.Params = argon2.DefaultParams(argon2Cipher.Params)
 

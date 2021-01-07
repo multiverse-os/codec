@@ -64,12 +64,12 @@ func ChecksumHash(c checksum.Type) Codec {
 	}
 }
 
-func CryptoSystem(a crypto.Algorithm) Codec {
+func CryptoSystem(a crypto.CryptoSystem) Codec {
 	return Codec{
 		encoding:     encoding.Format(encoding.Raw),
 		compression:  compression.Algorithm(compression.None),
 		checksum:     checksum.Algorithm(checksum.None),
-		cryptography: crypto.CryptoSystem(a),
+		cryptography: crypto.Algorithm(a),
 	}
 }
 
