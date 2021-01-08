@@ -2,6 +2,7 @@ package xxh32
 
 import (
 	"hash"
+	"math/rand"
 )
 
 const (
@@ -23,7 +24,11 @@ type xxHash struct {
 	bufused  int
 }
 
-func New(seed uint32) hash.Hash32 {
+func New() hash.Hash32 {
+	return NewWithSeed(rand.Uint32())
+}
+
+func NewWithSeed(seed uint32) hash.Hash32 {
 	xxh := &xxHash{seed: seed}
 	xxh.Reset()
 	return xxh

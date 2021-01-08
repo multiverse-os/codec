@@ -3,6 +3,7 @@ package checksum
 import (
 	none "github.com/multiverse-os/codec/checksum/none"
 	sha3 "github.com/multiverse-os/codec/checksum/sha3"
+	xxh32 "github.com/multiverse-os/codec/checksum/xxh32"
 	xxh64 "github.com/multiverse-os/codec/checksum/xxh64"
 )
 

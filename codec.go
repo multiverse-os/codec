@@ -2,6 +2,8 @@ package codec
 
 import (
 	"fmt"
+	"math/rand"
+	"time"
 
 	checksum "github.com/multiverse-os/codec/checksum"
 	compression "github.com/multiverse-os/codec/compression"
@@ -27,6 +29,7 @@ type Codec struct {
 
 // Initialization with raw/no compression, that can be defined
 func Initialize() Codec {
+	rand.Seed(time.Now().UTC().UnixNano())
 	return Codec{
 		encoding:    encoding.Format(encoding.Raw),
 		compression: compression.Algorithm(compression.None),
