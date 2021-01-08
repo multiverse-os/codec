@@ -28,7 +28,7 @@ func main() {
 		fmt.Println("IS ASYMMETRIC")
 	}
 
-	cipher := crypto.EmptyKeyring().AsymmetricKey(crypto.RSA)
+	cipher := crypto.EmptyKeyring().AddPublicKey(crypto.RSA)
 
 	fmt.Println("Adding data to our cipher that can be used to configure the")
 	fmt.Println("the encryption.\n")

@@ -7,44 +7,59 @@ import (
 
 ////////////////////////////////////////////////////////////////////////////////
 type Keys struct {
-	AsymmetricKeys []*asymmetric.Keypair
-	SymmetricKeys  []*symmetric.Key
+	AsymmetricKey asymmetric.Keypair
+	SymmetricKey  symmetric.Key
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 func EmptyKeyring() Keys {
 	return Keys{
-		AsymmetricKeys: []*asymmetric.Keypair{},
-		SymmetricKeys:  []*symmetric.Key{},
+		AsymmetricKey: asymmetric.Keypair{},
+		SymmetricKey:  symmetric.Key{},
 	}
 }
 
-func (self Keys) PublicKey(a Algorithm, key []byte) Keys {
+////////////////////////////////////////////////////////////////////////////////
+func (self Keys) AddPublicKey(a Algorithm, key []byte) Keys {
 	if a.IsAsymmetric() {
-		self.AsymmetricKeys = append(self.AsymmetricKeys, &asymmetric.Keypair{
+		self.AsymmetricKey = asymmetric.Keypair{
 			PublicKey: asymmetric.PublicKey(key),
 			Algorithm: a.(asymmetric.Algorithm),
-		})
+		}
 	}
 	return self
 }
 
-func (self Keys) PrivateKey(a Algorithm, key []byte) Keys {
+func (self Keys) AddPrivateKey(a Algorithm, key []byte) Keys {
 	if a.IsAsymmetric() {
-		self.AsymmetricKeys = append(self.AsymmetricKeys, &asymmetric.Keypair{
+		self.AsymmetricKey = asymmetric.Keypair{
 			PrivateKey: asymmetric.PrivateKey(key),
 			Algorithm:  a.(asymmetric.Algorithm),
-		})
+		}
 	}
 	return self
 }
 
-func (self Keys) SymmetricKey(a Algorithm, key []byte) Keys {
+func (self Keys) AddSymmetricKey(a Algorithm, key []byte) Keys {
 	if a.IsSymmetric() {
-		self.SymmetricKeys = append(self.SymmetricKeys, &symmetric.Key{
+		self.SymmetricKey = symmetric.Key{
 			Secret:    symmetric.Secret(key),
 			Algorithm: a.(symmetric.Algorithm),
-		})
+		}
 	}
 	return self
+}
+
+////////////////////////////////////////////////////////////////////////////////
+func (self Keys) GenerateAsymmetricKey(a Algorithm) Keys {
+	if a.IsAsymmetric() {
+		self.AsymmetricKey = asymmetric.GenerateKeypair(a)
+	}
+	return self
+}
+
+func (self Keys) GenerateSymmetricKey(a Algorithm) Keys {
+	if a.IsSymmetric() {
+		self.SymmetricKey = symmetric.GenerateKey(a)
+	}
 }
