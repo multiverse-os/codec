@@ -2,8 +2,8 @@ package crypto
 
 import (
 	asymmetric "github.com/multiverse-os/codec/crypto/key/asymmetric"
+	params "github.com/multiverse-os/codec/crypto/key/params"
 	symmetric "github.com/multiverse-os/codec/crypto/key/symmetric"
-	params "github.com/multiverse-os/codec/crypto/params"
 )
 
 ////////////////////////////////////////////////////////////////////////////////

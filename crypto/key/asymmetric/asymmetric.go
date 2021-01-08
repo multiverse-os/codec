@@ -1,7 +1,15 @@
 package asymmetric
 
 import (
-	params "github.com/multiverse-os/codec/crypto/params"
+	params "github.com/multiverse-os/codec/crypto/key/params"
+)
+
+////////////////////////////////////////////////////////////////////////////////
+type KeyType int
+
+const (
+	Public KeyType = iota
+	Private
 )
 
 ////////////////////////////////////////////////////////////////////////////////

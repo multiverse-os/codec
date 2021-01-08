@@ -4,15 +4,21 @@ import (
 	"crypto/rand"
 	"fmt"
 	"io"
+
+	params "github.com/multiverse-os/codec/crypto/key/params"
 )
+
+type Secret []byte
 
 ////////////////////////////////////////////////////////////////////////////////
 type Key struct {
 	Algorithm Algorithm
 
-	Secret []byte
+	Secret Secret
 
 	PasswordHash PasswordHash
+
+	Params params.Params
 }
 
 func (self Key) String() string { return self.Algorithm.String() }

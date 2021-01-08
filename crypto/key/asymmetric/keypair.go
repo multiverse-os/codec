@@ -1,18 +1,15 @@
 package asymmetric
 
+import (
+	params "github.com/multiverse-os/codec/crypto/key/params"
+)
+
+type PublicKey []byte
+type PrivateKey []byte
+
 type Permissions struct {
 	Sign   bool
 	Subkey bool
-}
-
-type PrivateKey struct {
-	Key        []byte
-	Fingerpint []byte
-}
-
-type PublicKey struct {
-	Key        []byte
-	Fingerpint []byte
 }
 
 type Contact struct {
@@ -27,6 +24,8 @@ type Keypair struct {
 	PublicKey  PublicKey
 	PrivateKey PrivateKey
 
+	Params params.Params
+
 	Contact
 	Permissions
 
@@ -36,6 +35,8 @@ type Keypair struct {
 	Parent  *Keypair
 	Subkeys []*Keypair
 }
+
+func (self Keypair) KeyAlgorithm() Algorithm { return self.Algorithm }
 
 func (self Keypair) String() string { return self.Algorithm.String() }
 

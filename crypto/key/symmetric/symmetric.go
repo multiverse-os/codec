@@ -1,6 +1,8 @@
 package symmetric
 
-import "github.com/multiverse-os/codec/crypto/params"
+import (
+	params "github.com/multiverse-os/codec/crypto/key/params"
+)
 
 type Algorithm int
 

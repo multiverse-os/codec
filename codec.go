@@ -20,10 +20,10 @@ type MarshalUnmarshaler interface {
 ////////////////////////////////////////////////////////////////////////////////
 
 type Codec struct {
-	encoding     encoding.Codec
-	compression  compression.Codec
-	checksum     checksum.Hash
-	cryptography crypto.Cipher
+	encoding    encoding.Codec
+	compression compression.Codec
+	checksum    checksum.Hash
+	keyring     crypto.Keyring
 }
 
 // Initialization with raw/no compression, that can be defined
@@ -32,6 +32,7 @@ func Initialize() Codec {
 		encoding:    encoding.Format(encoding.Raw),
 		compression: compression.Algorithm(compression.None),
 		checksum:    checksum.Algorithm(checksum.None),
+		keyring:     crypto.EmptyKeyring(),
 	}
 }
 
@@ -45,6 +46,7 @@ func EncodingFormat(encodingType encoding.Type) Codec {
 		encoding:    encoding.Format(encodingType),
 		compression: compression.Algorithm(compression.None),
 		checksum:    checksum.Algorithm(checksum.None),
+		keyring:     crypto.EmptyKeyring(),
 	}
 }
 
@@ -53,6 +55,7 @@ func CompressionAlgorithm(c compression.Type) Codec {
 		encoding:    encoding.Format(encoding.Raw),
 		compression: compression.Algorithm(c),
 		checksum:    checksum.Algorithm(checksum.None),
+		keyring:     crypto.EmptyKeyring(),
 	}
 }
 
@@ -61,17 +64,18 @@ func ChecksumHash(c checksum.Type) Codec {
 		encoding:    encoding.Format(encoding.Raw),
 		compression: compression.Algorithm(compression.None),
 		checksum:    checksum.Algorithm(c),
+		keyring:     crypto.EmptyKeyring(),
 	}
 }
 
-func CryptoSystem(a crypto.CryptoSystem) Codec {
-	return Codec{
-		encoding:     encoding.Format(encoding.Raw),
-		compression:  compression.Algorithm(compression.None),
-		checksum:     checksum.Algorithm(checksum.None),
-		cryptography: crypto.Algorithm(a),
-	}
-}
+//func CryptoKey(a crypto.Algorithm) Codec {
+//	return Codec{
+//		encoding:    encoding.Format(encoding.Raw),
+//		compression: compression.Algorithm(compression.None),
+//		checksum:    checksum.Algorithm(checksum.None),
+//		keyring:     crypto.EmptyKeyring(),
+//	}
+//}
 
 // Chain-able codec defintion //////////////////////////////////////////////////
 func (self Codec) EncodingFormat(encodingType encoding.Type) Codec {
@@ -89,8 +93,8 @@ func (self Codec) ChecksumAlgorithm(c checksum.Type) Codec {
 	return self
 }
 
-func (self Codec) Cipher(a crypto.Algorithm) Codec {
-	self.cryptography = crypto.CryptoSystem(a)
+func (self Codec) CryptoKey(a crypto.Algorithm) Codec {
+	self.cryptography = crypto.CryptoKey(a)
 	return self
 }
 
@@ -170,7 +174,7 @@ func Checksum(c checksum.Type, input []byte) []byte {
 
 //----------------------------------------------------------------------------//
 func Encrypt(a crypto.Algorithm, key, input []byte) ([]byte, error) {
-	return crypto.Cipher(a).Encrypt(key, input)
+	return crypto.CryptoKey(a).Encrypt(key, input)
 }
 
 func Decrypt(a crypto.Algorithm, key, input []byte) ([]byte, error) {
