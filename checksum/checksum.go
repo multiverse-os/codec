@@ -10,6 +10,7 @@ type Type int
 
 const (
 	None Type = iota
+	XXH32
 	XXH64
 	SHA3
 	// ChaCha
@@ -24,6 +25,8 @@ type Hash interface {
 
 func Algorithm(dataType Type) Hash {
 	switch dataType {
+	case XXH32:
+		return xxh32.ChecksumData{}
 	case XXH64:
 		return xxh64.ChecksumData{}
 	case SHA3:
