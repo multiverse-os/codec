@@ -4,7 +4,7 @@ import (
 	none "github.com/multiverse-os/codec/checksum/none"
 	sha3 "github.com/multiverse-os/codec/checksum/sha3"
 	xxh32 "github.com/multiverse-os/codec/checksum/xxh32"
-	xxh64 "github.com/multiverse-os/codec/checksum/xxh64"
+	//xxh64 "github.com/multiverse-os/codec/checksum/xxh64"
 )
 
 type Type int
@@ -28,8 +28,8 @@ func Algorithm(dataType Type) Hash {
 	switch dataType {
 	case XXH32:
 		return xxh32.ChecksumData{}
-	case XXH64:
-		return xxh64.ChecksumData{}
+	//case XXH64:
+	//	return xxh64.ChecksumData{}
 	case SHA3:
 		return sha3.ChecksumData{}
 	default: // None

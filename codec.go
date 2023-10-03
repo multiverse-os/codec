@@ -102,12 +102,13 @@ func (self Codec) ChecksumAlgorithm(c checksum.Type) Codec {
 //}
 
 // Encode/Decode Format ////////////////////////////////////////////////////////
+//
 //	Encode(input interface{}) ([]byte, error)
 func (self Codec) Encode(input interface{}) ([]byte, error) {
 	return self.encoding.Encode(input)
 }
 
-//	Decode(data []byte, output interface{}) error
+// Decode(data []byte, output interface{}) error
 func (self Codec) Decode(input []byte, output interface{}) error {
 	return self.encoding.Decode(input, output)
 }
@@ -151,7 +152,7 @@ func (self Codec) Checksum(input []byte) []byte {
 // MAYBE Add ability to take a large file, and break
 // it up into chunks and essentially merkle checksum it.
 
-////////////////////////////////////////////////////////////////////////////////
+// //////////////////////////////////////////////////////////////////////////////
 // No Codec Access /////////////////////////////////////////////////////////////
 func Encode(e encoding.Type, input interface{}) ([]byte, error) {
 	return encoding.Format(e).Encode(input)
@@ -161,7 +162,7 @@ func Decode(e encoding.Type, input []byte, value interface{}) error {
 	return encoding.Format(e).Decode(input, value)
 }
 
-//----------------------------------------------------------------------------//
+// ----------------------------------------------------------------------------//
 func Compress(c compression.Type, input []byte) ([]byte, error) {
 	return compression.Algorithm(c).Compress(input)
 }
@@ -170,7 +171,7 @@ func Uncompress(c compression.Type, input []byte) ([]byte, error) {
 	return compression.Algorithm(c).Uncompress(input)
 }
 
-//----------------------------------------------------------------------------//
+// ----------------------------------------------------------------------------//
 func Checksum(c checksum.Type, input []byte) []byte {
 	return checksum.Algorithm(c).Encode(input)
 }

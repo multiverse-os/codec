@@ -2,8 +2,8 @@ package lyra2
 
 import "errors"
 
-//NewLKey returns a new encryption key init to passphrase and salt, if no salt is specified, a new salt will be
-//generated for the new key.
+// NewLKey returns a new encryption key init to passphrase and salt, if no salt is specified, a new salt will be
+// generated for the new key.
 func NewLKey(passphrase, salt []byte) (*LKey, error) {
 	k := &LKey{}
 	var err error
@@ -24,19 +24,19 @@ func NewLKey(passphrase, salt []byte) (*LKey, error) {
 	return k, nil
 }
 
-//GetKey returns a reference to the key.
+// GetKey returns a reference to the key.
 func (k *LKey) GetKey() []byte {
 	return k.key.Buffer()
 }
 
-//GetSalt returns a reference to the salt of the key.
+// GetSalt returns a reference to the salt of the key.
 func (k *LKey) GetSalt() []byte {
 	return k.salt
 }
 
-//InitKey initializes an encryption key passphrase with salt salt. InitKey initializes a locked
-//buffer that will be resistant to unauthorized memory manipulation, additionally it will wipe
-//passphrase.
+// InitKey initializes an encryption key passphrase with salt salt. InitKey initializes a locked
+// buffer that will be resistant to unauthorized memory manipulation, additionally it will wipe
+// passphrase.
 func (k *LKey) initKey(passphrase, salt []byte) error {
 	var err error
 	k.key, err = memguard.NewImmutableFromBytes(GenKey(passphrase, salt))
@@ -45,7 +45,7 @@ func (k *LKey) initKey(passphrase, salt []byte) error {
 	return err
 }
 
-//DestroyKey safely destroy the encryption from memory,
+// DestroyKey safely destroy the encryption from memory,
 func (k *LKey) DestroyKey() error {
 	k.key.Destroy()
 	if !k.key.IsDestroyed() {
@@ -54,7 +54,7 @@ func (k *LKey) DestroyKey() error {
 	return nil
 }
 
-//wipeData will wipe any dst slice with cryptographically secure bytes.
+// wipeData will wipe any dst slice with cryptographically secure bytes.
 func wipeData(dst []byte) error {
 	_, err := GenNonce(dst)
 	return err

@@ -3,8 +3,6 @@ package symmetric
 import (
 	"fmt"
 
-	params "github.com/multiverse-os/codec/crypto/params"
-
 	bcrypt "golang.org/x/crypto/bcrypt"
 )
 
@@ -29,85 +27,90 @@ import (
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-////////////////////////////////////////////////////////////////////////////////
+// //////////////////////////////////////////////////////////////////////////////
 // Asymmetric / Symmetric Key Functions
-////////////////////////////////////////////////////////////////////////////////
+// //////////////////////////////////////////////////////////////////////////////
 type SymmetricKey interface {
 	PasswordHash(password string) ([]byte, error)
 	IsPasswordValid(password string) (bool, error)
 }
 
 type Key struct {
-	secret    []byte
-	hash      PasswordHash
-	algorithm Algorithm
-	params    params.Params
+	Secret    []byte
+	Hash      PasswordHash
+	Algorithm Algorithm
+	Options   *Options
 }
 
-////////////////////////////////////////////////////////////////////////////////
+type Options struct {
+	Salt []byte
+	Cost int
+}
+
+// //////////////////////////////////////////////////////////////////////////////
 func Generate() Key {
 	return Key{
-		algorithm: Version2b,
-		params:    make(params.Params),
+		Algorithm: Version2b,
+		Options:   &Options{},
 	}
 }
 
-func (self Key) Password(password []byte) Key {
-	self.Secret = password
-	return self
+func (key Key) Password(password []byte) Key {
+	key.Secret = password
+	return key
 }
 
-func (self Key) Hash(hash []byte) Key {
+func (key Key) Hash(hash []byte) Key {
 
 }
 
-////////////////////////////////////////////////////////////////////////////////
-func (self Key) Encrypt(plainText []byte) ([]byte, error)  { return []byte{}, nil }
-func (self Key) Decrypt(cipherText []byte) ([]byte, error) { return []byte{}, nil }
+// //////////////////////////////////////////////////////////////////////////////
+func (key Key) Encrypt(plainText []byte) ([]byte, error)  { return []byte{}, nil }
+func (key Key) Decrypt(cipherText []byte) ([]byte, error) { return []byte{}, nil }
 
-func (self Key) Sign(input []byte) ([]byte, error) { return []byte{}, nil }
-func (self Key) Verify(input []byte) (bool, error) { return false, nil }
+func (key Key) Sign(input []byte) ([]byte, error) { return []byte{}, nil }
+func (key Key) Verify(input []byte) (bool, error) { return false, nil }
 
-////////////////////////////////////////////////////////////////////////////////
+// //////////////////////////////////////////////////////////////////////////////
 // TODO: Store these in params.Parmas
-func (self Key) Salt(salt []byte) Key {
-	self.Params.AddBytes("salt", salt)
-	return self
+func (key *Key) Salt(salt []byte) Key {
+	key.Options.Salt = salt
+	return key
 }
 
-func (self Key) Cost(cost int) Key {
-	self.Params.AddInteger("cost", cost)
-	return self
+func (key *Key) Cost(cost int) Key {
+	key.Options.Cost = cost
+	return key
 }
 
-func (self Key) Algorithm(algorithm Algorithm) Key {
-	self.Hash.Algorithm = algorithm
-	return self
+func (key *Key) Algorithm(algorithm Algorithm) Key {
+	key.Hash.Algorithm = algorithm
+	return key
 }
 
-////////////////////////////////////////////////////////////////////////////////
-func (self Key) PasswordHash(seed []byte) (Key, error) {
+// //////////////////////////////////////////////////////////////////////////////
+func (key Key) PasswordHash(seed []byte) (Key, error) {
 	if hash, err := bcrypt.GenerateFromPassword(seed, bcrypt.DefaultCost); err != nil {
 		return Key{}, err
 	} else {
 		return Key{
 			Secret:    seed,
 			Algorithm: Version2b,
-			Params:    make(params.Params),
+			Options:   Options{},
 			Hash:      hash,
 		}, nil
 	}
 }
 
-func (self Key) IsPasswordValid(password string) (bool, error) {
-	if err := bcrypt.CompareHashAndPassword(self.Hash, []byte(password)); err != nil {
+func (key Key) IsPasswordValid(password string) (bool, error) {
+	if err := bcrypt.CompareHashAndPassword(key.Hash, []byte(password)); err != nil {
 		return false, err
 	} else {
 		return true, nil
 	}
 }
 
-////////////////////////////////////////////////////////////////////////////////
+// //////////////////////////////////////////////////////////////////////////////
 type PasswordHash struct {
 	Algorithm Algorithm
 	Cost      int
@@ -115,16 +118,16 @@ type PasswordHash struct {
 	Hash      []byte
 }
 
-func (self PasswordHash) Valid() (bool, error) {
-	if len(self.Hash) != 31 {
+func (key PasswordHash) Valid() (bool, error) {
+	if len(key.Hash) != 31 {
 		return false, fmt.Errorf("invalid hash length")
-	} else if len(self.Salt) != 22 {
+	} else if len(key.Salt) != 22 {
 		return false, fmt.Errorf("invalid salt length")
 	} else {
 		return true, nil
 	}
 }
 
-func (self PasswordHash) String() string {
-	return fmt.Sprintf("$%s$%s$%s%s", self.Algorithm, self.Cost, self.Salt, self.Hash)
+func (key PasswordHash) String() string {
+	return fmt.Sprintf("$%s$%s$%s%s", key.Algorithm, key.Cost, key.Salt, key.Hash)
 }
